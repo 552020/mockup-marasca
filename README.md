@@ -2,6 +2,9 @@
 
 Due strumenti per provare un'etichetta d'olio su una bottiglia in 3D.
 
+Sito: https://mockup-marasca.vercel.app  ·  Repository: https://github.com/552020/mockup-marasca
+Ogni push su `main` aggiorna il sito.
+
 ## 1. WebGL, nel browser (immediato)
 
 `index.html` è la pagina: online su Vercel (vedi sotto) oppure in locale con un doppio clic (serve la connessione per scaricare la libreria Three.js).
