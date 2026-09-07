@@ -1,0 +1,1720 @@
+<title>Mockup Marasca</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  :root{
+    --bg:#f1efe6; --panel:#fbfaf5; --panel-2:#f3f1e8; --ink:#1e2317; --muted:#6d7160;
+    --line:#d9d6c7; --line-strong:#b9b6a5; --accent:#5f6f22; --accent-ink:#ffffff; --gold:#a8791a;
+    --danger:#a33a2a; --focus:#5f6f22; --shadow:0 12px 40px rgba(30,35,23,.18);
+    color-scheme:light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#141610; --panel:#1c1f16; --panel-2:#22261b; --ink:#e8e6d9; --muted:#9b9e8b;
+      --line:#2f3327; --line-strong:#464b3a; --accent:#a7b559; --accent-ink:#141610; --gold:#d5ad3f;
+      --danger:#e07a68; --focus:#a7b559; --shadow:0 12px 40px rgba(0,0,0,.5);
+      color-scheme:dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#141610; --panel:#1c1f16; --panel-2:#22261b; --ink:#e8e6d9; --muted:#9b9e8b;
+    --line:#2f3327; --line-strong:#464b3a; --accent:#a7b559; --accent-ink:#141610; --gold:#d5ad3f;
+    --danger:#e07a68; --focus:#a7b559; --shadow:0 12px 40px rgba(0,0,0,.5);
+    color-scheme:dark;
+  }
+  *{box-sizing:border-box}
+  [hidden]{display:none!important}
+  html,body{height:100%}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font:14px/1.45 "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+    display:flex; flex-direction:column; min-height:100dvh;
+  }
+  .mono{font-family:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace; font-variant-numeric:tabular-nums}
+  header.top{
+    display:flex; align-items:baseline; justify-content:space-between; gap:24px;
+    padding:14px 22px 12px; border-bottom:1px solid var(--line); background:var(--panel);
+  }
+  header h1{
+    margin:0; font-family:Fraunces, Georgia, "Times New Roman", serif; font-weight:600;
+    font-size:22px; letter-spacing:-.01em; line-height:1.1; text-wrap:balance;
+  }
+  header .sub{margin:2px 0 0; color:var(--muted); font-size:13px}
+  header .hint{margin:0; color:var(--muted); font-size:13px; max-width:42ch; text-align:right}
+  kbd{font:inherit; font-size:12px; padding:0 4px; border:1px solid var(--line-strong); border-radius:3px; background:var(--panel-2)}
+  main{flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 350px}
+  .stage{position:relative; min-height:0; overflow:hidden; background:var(--bg)}
+  .stage canvas{display:block; width:100%; height:100%; touch-action:none; cursor:grab; outline:none}
+  .stage canvas:active{cursor:grabbing}
+  .stage canvas:focus-visible{box-shadow:inset 0 0 0 2px var(--focus)}
+  .veil{
+    position:absolute; inset:14px; border:2px dashed var(--accent); border-radius:6px;
+    display:flex; align-items:center; justify-content:center; text-align:center; padding:24px;
+    background:color-mix(in srgb, var(--panel) 70%, transparent);
+    font-family:Fraunces, Georgia, serif; font-size:20px; color:var(--ink); pointer-events:none; text-wrap:balance;
+  }
+  .stage-bar{
+    position:absolute; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:space-between;
+    gap:12px; padding:10px 16px; pointer-events:none;
+  }
+  .stage-bar > *{pointer-events:auto}
+  .stage-bar .dims{color:var(--muted); font-size:12.5px; background:color-mix(in srgb, var(--panel) 82%, transparent); padding:6px 10px; border-radius:4px}
+  .stage-actions{display:flex; gap:8px}
+  button{
+    font:inherit; font-weight:500; color:var(--ink); background:var(--panel); border:1px solid var(--line-strong);
+    border-radius:4px; padding:7px 12px; cursor:pointer;
+  }
+  button:hover{border-color:var(--accent)}
+  button:focus-visible, input:focus-visible, select:focus-visible{outline:2px solid var(--focus); outline-offset:2px}
+  button.primary{background:var(--accent); color:var(--accent-ink); border-color:var(--accent)}
+  button.big{padding:11px 14px; font-size:14.5px; width:100%}
+  button.ghost{background:transparent; border-color:var(--line)}
+  .panel{
+    border-left:1px solid var(--line); background:var(--panel); overflow-y:auto; min-height:0;
+    display:flex; flex-direction:column;
+  }
+  .panel section{padding:16px 20px 18px; border-bottom:1px solid var(--line); display:flex; flex-direction:column; gap:12px}
+  .panel section:last-child{border-bottom:0}
+  .panel h2{
+    margin:0; font-size:11.5px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--muted);
+    display:flex; justify-content:space-between; align-items:baseline; gap:8px
+  }
+  .panel h2 .opt{font-weight:400; letter-spacing:0; text-transform:none; font-size:12px}
+  .row{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+  .dims-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:10px}
+  .stack{display:flex; flex-direction:column; gap:12px}
+  label.lbl{display:flex; flex-direction:column; gap:5px; font-size:12.5px; color:var(--muted)}
+  label.lbl .unit{color:var(--muted); font-size:11.5px}
+  select, input[type=number]{
+    font:inherit; color:var(--ink); background:var(--panel-2); border:1px solid var(--line); border-radius:4px;
+    padding:6px 8px; width:100%; min-width:0;
+  }
+  select:disabled, input:disabled{opacity:.45}
+  textarea{font:12px/1.4 "IBM Plex Mono", ui-monospace, monospace; width:100%; background:var(--panel-2); color:var(--ink); border:1px solid var(--line); border-radius:4px; padding:8px; resize:vertical; min-height:96px}
+  input[type=color]{width:100%; height:34px; padding:2px 4px; border:1px solid var(--line); border-radius:4px; background:var(--panel-2); cursor:pointer}
+  input[type=number]{font-family:"IBM Plex Mono", ui-monospace, monospace; font-variant-numeric:tabular-nums; text-align:right}
+  .field{display:grid; grid-template-columns:1fr 78px; gap:10px; align-items:center}
+  .field .head{grid-column:1 / -1; display:flex; justify-content:space-between; font-size:12.5px; color:var(--muted)}
+  .field .head b{font-weight:500; color:var(--ink)}
+  .scale{display:flex; justify-content:space-between; font-size:11.5px; color:var(--muted)}
+  input[type=range]{width:100%; accent-color:var(--accent); margin:0}
+  .check{display:flex; align-items:center; gap:8px; font-size:13px; color:var(--ink)}
+  .check input{accent-color:var(--accent); margin:0}
+  .file{
+    border:1px dashed var(--line-strong); border-radius:6px; padding:12px; background:var(--panel-2);
+    display:flex; flex-direction:column; gap:6px; cursor:pointer; position:relative;
+  }
+  .file:hover{border-color:var(--accent)}
+  .file input{position:absolute; inset:0; opacity:0; cursor:pointer; width:100%}
+  .file .name{font-weight:500; color:var(--ink); overflow-wrap:anywhere}
+  .file .meta{color:var(--muted); font-size:12px}
+  .file .cta{color:var(--accent); font-weight:500; font-size:12.5px}
+  .note{font-size:12px; color:var(--muted); margin:0}
+  .note a{color:var(--accent)}
+  .warn{color:var(--danger); font-size:12px; margin:0}
+  .info{
+    display:grid; grid-template-columns:auto 1fr; gap:4px 14px; font-size:12.5px; color:var(--muted);
+    padding:10px 12px; background:var(--panel-2); border-radius:4px;
+  }
+  .info b{color:var(--ink); font-weight:500; text-align:right}
+  .seg{display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line-strong); border-radius:4px; overflow:hidden}
+  .seg button{border:0; border-radius:0; background:var(--panel); padding:7px 4px; font-size:12.5px}
+  .seg button + button{border-left:1px solid var(--line)}
+  .seg button[aria-pressed="true"]{background:var(--accent); color:var(--accent-ink)}
+  .banner{
+    display:flex; flex-direction:column; gap:4px; padding:10px 12px; border-radius:4px;
+    background:color-mix(in srgb, var(--accent) 12%, var(--panel-2)); border:1px solid color-mix(in srgb, var(--accent) 40%, var(--line));
+    font-size:12.5px; color:var(--muted);
+  }
+  .banner b{color:var(--ink); font-weight:500}
+  .shot{position:fixed; inset:0; background:rgba(10,12,8,.72); display:flex; align-items:center; justify-content:center; padding:24px; z-index:10}
+  .shot-card{background:var(--panel); border-radius:8px; padding:16px; max-width:min(920px,100%); max-height:100%; overflow:auto; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:12px}
+  .shot-card img{max-width:100%; max-height:70vh; display:block; border-radius:4px; background:#000}
+  .shot-card .foot{display:flex; justify-content:space-between; align-items:center; gap:12px}
+  @media (max-width: 880px){
+    header.top{padding:12px 16px}
+    header .hint{display:none}
+    main{grid-template-columns:1fr; grid-template-rows:58vh auto}
+    .panel{border-left:0; border-top:1px solid var(--line)}
+  }
+</style>
+
+<header class="top">
+  <div>
+    <h1>Mockup Marasca</h1>
+    <p class="sub">Prova etichette su bottiglia d'olio, misure reali in millimetri</p>
+  </div>
+  <p class="hint">Carica il PNG o JPG dell'etichetta con il pulsante, trascinalo sulla bottiglia o incollalo con <kbd>⌘V</kbd> direttamente da Photoshop. Un file GLB, OBJ o STL trascinato diventa la vostra bottiglia. Trascina col mouse per ruotare, rotella per lo zoom.</p>
+</header>
+
+<main>
+  <section class="stage" id="stage">
+    <canvas id="c" tabindex="0" aria-label="Anteprima 3D della bottiglia"></canvas>
+    <div class="veil" id="veil" hidden>Rilascia: un'immagine diventa l'etichetta fronte, un GLB, OBJ o STL diventa la bottiglia</div>
+    <div class="stage-bar">
+      <span class="dims mono" id="dims"></span>
+      <div class="stage-actions">
+        <button id="btnFront" type="button">Vista frontale</button>
+        <button id="btnShot" class="primary" type="button">Scatta foto</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <section>
+      <h2>Etichetta fronte</h2>
+      <button type="button" class="primary big" id="btnPick">Carica la tua etichetta (PNG o JPG)</button>
+      <div class="file" id="fileFront">
+        <span class="name" id="frontName">Etichetta di esempio</span>
+        <span class="meta" id="frontMeta">Generata qui, 90 × 120 mm</span>
+        <span class="cta">…oppure trascina qui il file, o incollalo con ⌘V</span>
+        <input type="file" id="inFront" accept="image/png,image/jpeg,image/webp,image/*" aria-label="Carica etichetta fronte">
+      </div>
+      <div class="field">
+        <div class="head"><span>Larghezza</span><b class="mono" id="wLabel"></b></div>
+        <input type="range" id="rW" min="20" max="190" step="1">
+        <input type="number" id="nW" min="20" max="190" step="1" aria-label="Larghezza in millimetri">
+      </div>
+      <div class="field">
+        <div class="head"><span>Altezza</span><b class="mono" id="hLabel"></b></div>
+        <input type="range" id="rH" min="20" max="160" step="1">
+        <input type="number" id="nH" min="20" max="160" step="1" aria-label="Altezza in millimetri">
+      </div>
+      <label class="check"><input type="checkbox" id="lock" checked> Mantieni le proporzioni dell'immagine</label>
+      <div class="field">
+        <div class="head"><span>Distanza dal fondo</span><b class="mono" id="bLabel"></b></div>
+        <input type="range" id="rB" min="0" max="120" step="1">
+        <input type="number" id="nB" min="0" max="120" step="1" aria-label="Distanza dal fondo in millimetri">
+      </div>
+      <div class="row">
+        <button type="button" class="ghost" id="btnWrap">Fascia intera</button>
+        <button type="button" class="ghost" id="btnStd">Torna a 90 × 120</button>
+      </div>
+      <p class="warn" id="warnW" hidden></p>
+    </section>
+
+    <section>
+      <h2>Etichetta retro <span class="opt">facoltativa</span></h2>
+      <div class="file" id="fileBack">
+        <span class="name" id="backName">Nessuna</span>
+        <span class="meta" id="backMeta">Stessa distanza dal fondo del fronte</span>
+        <span class="cta">Scegli un file PNG o JPG…</span>
+        <input type="file" id="inBack" accept="image/png,image/jpeg,image/webp,image/*" aria-label="Carica etichetta retro">
+      </div>
+      <div class="field" id="backField" hidden>
+        <div class="head"><span>Larghezza retro</span><b class="mono" id="bwLabel"></b></div>
+        <input type="range" id="rBW" min="20" max="190" step="1">
+        <input type="number" id="nBW" min="20" max="190" step="1" aria-label="Larghezza retro in millimetri">
+      </div>
+      <button type="button" class="ghost" id="btnBackClear" hidden>Rimuovi retro</button>
+    </section>
+
+    <section>
+      <h2>Bottiglia</h2>
+      <div class="banner" id="modelBanner" hidden>
+        <b id="modelBannerName"></b>
+        <span>Le quote qui sotto sono lette dal file. Rimuovilo per tornare alla bottiglia parametrica.</span>
+      </div>
+      <div class="row">
+        <label class="lbl">Modello di partenza
+          <select id="selBottle">
+            <option value="marasca250">Marasca 250 ml</option>
+            <option value="marasca500" selected>Marasca 500 ml</option>
+            <option value="marasca750">Marasca 750 ml</option>
+            <option value="dorica500">Dorica 500 ml</option>
+            <option value="custom">Personalizzata</option>
+          </select>
+        </label>
+        <label class="lbl">Vetro
+          <select id="selGlass">
+            <option value="verde" selected>Verde antico</option>
+            <option value="trasparente">Trasparente</option>
+            <option value="ambra">Ambra</option>
+          </select>
+        </label>
+      </div>
+      <div class="dims-grid">
+        <label class="lbl">Ø corpo <span class="unit">mm</span><input type="number" id="dR" min="30" max="120" step="0.5"></label>
+        <label class="lbl">Altezza <span class="unit">mm</span><input type="number" id="dH" min="100" max="450" step="1"></label>
+        <label class="lbl">Ø collo <span class="unit">mm</span><input type="number" id="dNeck" min="14" max="60" step="0.5"></label>
+        <label class="lbl">Corpo dritto <span class="unit">mm</span><input type="number" id="dBody" min="30" max="400" step="1"></label>
+        <label class="lbl">Spalla <span class="unit">mm</span><input type="number" id="dShoulder" min="4" max="80" step="1"></label>
+        <label class="lbl">Forma spalla
+          <input type="range" id="dP" min="1.2" max="3.5" step="0.1" aria-label="Forma della spalla, da morbida a squadrata">
+          <span class="scale"><span>morbida</span><span>squadrata</span></span>
+        </label>
+      </div>
+      <div class="row">
+        <label class="lbl">Tappo versatore
+          <select id="selCap">
+            <option value="nero" selected>Nero</option>
+            <option value="oro">Oro</option>
+            <option value="argento">Argento</option>
+            <option value="custom">Colore personalizzato</option>
+          </select>
+        </label>
+        <label class="lbl">Finitura etichetta
+          <select id="selFinish">
+            <option value="opaca" selected>Carta opaca</option>
+            <option value="lucida">Lucida / plastificata</option>
+          </select>
+        </label>
+      </div>
+      <div class="row" id="capCustom" hidden>
+        <label class="lbl">Colore del tappo<input type="color" id="capColor" value="#8a1c1c" aria-label="Colore del tappo"></label>
+        <label class="check" style="align-self:end; padding-bottom:8px"><input type="checkbox" id="capMetal"> Finitura metallica</label>
+      </div>
+      <div class="row">
+        <label class="check"><input type="checkbox" id="straightNeck"> Collo dritto, senza anello</label>
+        <label class="check"><input type="checkbox" id="spout" checked> Beccuccio sopra il tappo</label>
+      </div>
+      <div class="info" id="info"></div>
+      <p class="note">Le quote dei modelli di partenza sono quelle tipiche dei vetri Marasca e Dorica con imboccatura da 31,5 mm; il vetraio può variare di qualche millimetro. Modifica un valore per passare a «Personalizzata».</p>
+    </section>
+
+    <section>
+      <h2>La vostra bottiglia <span class="opt">GLB, OBJ o STL</span></h2>
+      <div class="file" id="fileModel">
+        <span class="name" id="modelName">Nessun file</span>
+        <span class="meta" id="modelMeta">Il modello del vetraio o un vostro file 3D. Sostituisce la bottiglia parametrica.</span>
+        <span class="cta">Scegli un file GLB, OBJ o STL…</span>
+        <input type="file" id="inModel" accept=".glb,.gltf,.obj,.stl" aria-label="Carica un modello 3D della bottiglia">
+      </div>
+      <div class="stack" id="modelTools" hidden>
+        <div class="field">
+          <div class="head"><span>Altezza reale della bottiglia</span><b class="mono" id="mhLabel"></b></div>
+          <input type="range" id="rMH" min="80" max="450" step="1">
+          <input type="number" id="nMH" min="80" max="450" step="1" aria-label="Altezza reale in millimetri">
+        </div>
+        <label class="check"><input type="checkbox" id="zUp"> L'asse verticale del file è Z (file CAD, STL)</label>
+        <label class="check"><input type="checkbox" id="keepMat"> Mantieni i materiali del file invece del vetro</label>
+        <button type="button" class="ghost" id="btnModelClear">Rimuovi la bottiglia da file</button>
+      </div>
+      <p class="warn" id="modelWarn" hidden></p>
+      <p class="note">L'etichetta si avvolge sul diametro misurato alla sua altezza. Da Blender o dal CAD esporta in GLB, che porta tutto in un file solo.</p>
+    </section>
+
+    <section>
+      <h2>Per Blender <span class="opt">resa fotografica</span></h2>
+      <button type="button" class="primary big" id="btnBlender">Scarica il file per Blender</button>
+      <p class="note">Un solo file con dentro bottiglia, quote, tappo, etichetta e impostazioni correnti. In Blender (gratuito, blender.org): area <b>Scripting</b> → menu Testo → Apri → scegli il file → <b>Esegui script</b>. La scena compare con vetro, olio, luci e camera pronti per il render Cycles. Il file arriva con estensione .txt: Blender lo legge così com'è.</p>
+      <p class="note" id="siteLinks" hidden>Sul sito trovi anche lo <a href="marasca_mockup.py" download>script Blender da solo</a>, con tutte le opzioni da riga di comando, e le <a href="README.md">istruzioni</a>.</p>
+      <div class="stack" id="blenderCopy" hidden>
+        <p class="note">Qui il salvataggio diretto non è disponibile. Copia tutto il testo qui sotto e incollalo in Blender: area <b>Scripting</b> → menu Testo → Nuovo → incolla → <b>Esegui script</b>.</p>
+        <textarea id="blenderText" readonly spellcheck="false" aria-label="Script per Blender"></textarea>
+        <button type="button" class="ghost" id="btnBlenderCopy">Copia negli appunti</button>
+      </div>
+      <p class="warn" id="blenderWarn" hidden></p>
+    </section>
+
+    <section>
+      <h2>Scena</h2>
+      <label class="lbl">Sfondo
+        <div class="seg" id="segBg" role="group" aria-label="Sfondo">
+          <button type="button" data-v="chiaro">Studio chiaro</button>
+          <button type="button" data-v="grigio">Grigio</button>
+          <button type="button" data-v="scuro">Scuro</button>
+        </div>
+      </label>
+      <label class="check"><input type="checkbox" id="spin" checked> Rotazione lenta</label>
+    </section>
+  </aside>
+</main>
+
+<div class="shot" id="shot" hidden>
+  <div class="shot-card">
+    <img id="shotImg" alt="Foto della bottiglia con l'etichetta">
+    <div class="foot">
+      <span class="note">Tasto destro sull'immagine, poi «Salva immagine con nome» o «Copia immagine».</span>
+      <button type="button" id="shotClose">Chiudi</button>
+    </div>
+  </div>
+</div>
+
+<script type="text/plain" id="blenderTemplate">
+# marasca_mockup.py
+# Costruisce una bottiglia d'olio Marasca o Dorica con etichetta e la renderizza con Cycles (Blender 4.x).
+#
+# FILE SCARICATO DAL SITO: porta dentro etichetta, impostazioni ed eventuale bottiglia da file.
+#   In Blender aperto: area «Scripting» → menu Testo → Apri → scegli il file → pulsante «Esegui script».
+#   Dal Terminale (macOS): /Applications/Blender.app/Contents/MacOS/Blender -P mockup-marasca-blender.txt
+#   Con Blender aperto lo script costruisce solo la scena; con -b (background) la renderizza in render.png.
+#
+# Uso generale dal Terminale (Blender in background):
+#   blender -b -P marasca_mockup.py -- --label etichetta.png --out render.png
+#
+# Per aprire la scena in Blender e lavorarci a mano:
+#   blender -P marasca_mockup.py -- --label etichetta.png
+#
+# Opzioni (tutte facoltative; quelle incorporate dal sito fanno da default):
+#   --bottle marasca250|marasca500|marasca750|dorica500|custom   (default marasca500)
+#   --diameter MM --height MM --body MM --shoulder MM --shoulder-shape 1.2..3.5 --neck-diameter MM
+#                         quote a scelta, sovrascrivono quelle del modello di partenza
+#   --label FILE          PNG o JPG dell'etichetta fronte (senza, viene generata un'etichetta segnaposto)
+#   --label-width MM      larghezza in mm (default 90); l'altezza segue le proporzioni dell'immagine
+#   --label-height MM     forza l'altezza in mm (l'immagine viene stirata)
+#   --label-bottom MM     distanza dal fondo in mm (default 32)
+#   --back FILE           etichetta retro, facoltativa
+#   --back-width MM       larghezza del retro (default 60)
+#   --model FILE          bottiglia da file GLB, glTF, OBJ o STL al posto di quella parametrica
+#   --model-height MM     altezza reale della bottiglia da file (default 271)
+#   --glass verde|trasparente|ambra                         (default verde)
+#   --cap nero|oro|argento                                  (default nero)
+#   --cap-color '#rrggbb' colore del tappo a scelta, al posto di --cap (con --cap-metal per la finitura metallica)
+#   --neck anello|dritto  collo con anello sotto il tappo (default) oppure dritto
+#   --no-spout            tappo senza beccuccio versatore sopra
+#   --finish opaca|lucida                                   (default opaca)
+#   --angle GRADI         rotazione della camera attorno alla bottiglia, 0 = frontale (default 18)
+#   --res W H             risoluzione in pixel (default 1600 2000)
+#   --samples N           campioni Cycles (default 256; 64 per una prova rapida)
+#   --transparent         sfondo trasparente: PNG con alpha da montare in Photoshop
+#   --view Standard|AgX   trasformata colore (default Standard: i colori dell'etichetta restano fedeli)
+#   --out FILE            immagine di uscita (default render.png)
+#   --save-blend FILE     salva anche la scena .blend
+#   --no-render           costruisce solo la scena (automatico con Blender aperto)
+
+import argparse
+import base64
+import json
+import math
+import os
+import sys
+import tempfile
+
+import bpy
+import bmesh
+from mathutils import Vector
+
+EMBEDDED = None  # la pagina web sostituisce questa riga con impostazioni, etichette e bottiglia da file
+
+MM = 0.001            # la scena è in metri, le quote qui sotto in millimetri
+NECK_R = 15.75        # imboccatura PP 31,5 per il tappo versatore
+WALL = 3.0            # spessore del vetro
+INNER_NECK_R = 9.8    # raggio interno del collo
+
+BOTTLES = {
+    'marasca250': dict(name='Marasca 250 ml', R=26.0, H=208.0, body=128.0, shoulder=12.0, p=2.4),
+    'marasca500': dict(name='Marasca 500 ml', R=31.5, H=271.0, body=168.0, shoulder=15.0, p=2.4),
+    'marasca750': dict(name='Marasca 750 ml', R=36.0, H=300.0, body=186.0, shoulder=17.0, p=2.4),
+    'dorica500':  dict(name='Dorica 500 ml',  R=30.0, H=297.0, body=178.0, shoulder=34.0, p=1.5),
+}
+GLASS = {
+    'verde':       dict(color=(0.10, 0.30, 0.10, 1.0), absorb=(0.30, 0.62, 0.28), density=260.0),
+    'trasparente': dict(color=(0.97, 0.99, 0.97, 1.0), absorb=(0.88, 0.95, 0.88), density=15.0),
+    'ambra':       dict(color=(0.60, 0.28, 0.06, 1.0), absorb=(0.75, 0.42, 0.12), density=220.0),
+}
+CAPS = {
+    'nero':    dict(color=(0.015, 0.015, 0.015, 1.0), metallic=0.0, roughness=0.40),
+    'oro':     dict(color=(0.83, 0.62, 0.22, 1.0),   metallic=1.0, roughness=0.22),
+    'argento': dict(color=(0.86, 0.86, 0.85, 1.0),   metallic=1.0, roughness=0.20),
+}
+
+
+def srgb_to_linear(c):
+    return c / 12.92 if c <= 0.04045 else ((c + 0.055) / 1.055) ** 2.4
+
+
+def cap_spec(args):
+    """Tappo: uno dei preset, oppure un colore esadecimale a scelta."""
+    if not args.cap_color:
+        return CAPS[args.cap]
+    h = args.cap_color.lstrip('#')
+    if len(h) != 6:
+        raise SystemExit(f'--cap-color vuole un colore come #8a1c1c, ricevuto {args.cap_color!r}')
+    rgb = tuple(srgb_to_linear(int(h[i:i + 2], 16) / 255.0) for i in (0, 2, 4))
+    return dict(color=(*rgb, 1.0), metallic=1.0 if args.cap_metal else 0.0, roughness=0.25 if args.cap_metal else 0.40)
+
+
+def parse_args():
+    argv = sys.argv[sys.argv.index('--') + 1:] if '--' in sys.argv else []
+    p = argparse.ArgumentParser(prog='marasca_mockup.py')
+    p.add_argument('--bottle', default='marasca500', choices=sorted(BOTTLES) + ['custom'])
+    p.add_argument('--diameter', type=float)
+    p.add_argument('--height', type=float)
+    p.add_argument('--body', type=float)
+    p.add_argument('--shoulder', type=float)
+    p.add_argument('--shoulder-shape', type=float)
+    p.add_argument('--neck-diameter', type=float)
+    p.add_argument('--label')
+    p.add_argument('--label-width', type=float, default=90.0)
+    p.add_argument('--label-height', type=float)
+    p.add_argument('--label-bottom', type=float, default=32.0)
+    p.add_argument('--back')
+    p.add_argument('--back-width', type=float, default=60.0)
+    p.add_argument('--model')
+    p.add_argument('--model-height', type=float, default=271.0)
+    p.add_argument('--label-radius', type=float)
+    p.add_argument('--glass', default='verde', choices=sorted(GLASS))
+    p.add_argument('--cap', default='nero', choices=sorted(CAPS))
+    p.add_argument('--cap-color')
+    p.add_argument('--cap-metal', action='store_true')
+    p.add_argument('--neck', default='anello', choices=['anello', 'dritto'])
+    p.add_argument('--no-spout', action='store_true')
+    p.add_argument('--finish', default='opaca', choices=['opaca', 'lucida'])
+    p.add_argument('--angle', type=float, default=18.0)
+    p.add_argument('--res', type=int, nargs=2, default=[1600, 2000], metavar=('W', 'H'))
+    p.add_argument('--samples', type=int, default=256)
+    p.add_argument('--transparent', action='store_true')
+    p.add_argument('--view', default='Standard')
+    p.add_argument('--out', default='render.png')
+    p.add_argument('--save-blend')
+    p.add_argument('--no-render', action='store_true')
+    if EMBEDDED and EMBEDDED.get('settings'):
+        known = {a.dest for a in p._actions}
+        p.set_defaults(**{k: v for k, v in EMBEDDED['settings'].items() if k in known and v is not None})
+    return p.parse_args(argv)
+
+
+# ---------------------------------------------------------------- utilità
+
+def set_input(node, names, value):
+    """Imposta il primo socket esistente tra i nomi dati (compatibilità 3.x / 4.x)."""
+    for n in names:
+        if n in node.inputs:
+            node.inputs[n].default_value = value
+            return True
+    return False
+
+
+def link_object(ob):
+    bpy.context.scene.collection.objects.link(ob)
+    return ob
+
+
+def mesh_from_bmesh(name, bm, smooth=True, sharp_angle=math.radians(35)):
+    if smooth:
+        for f in bm.faces:
+            f.smooth = True
+        for e in bm.edges:
+            if len(e.link_faces) == 2 and e.calc_face_angle(0.0) > sharp_angle:
+                e.smooth = False
+    me = bpy.data.meshes.new(name)
+    bm.to_mesh(me)
+    bm.free()
+    return link_object(bpy.data.objects.new(name, me))
+
+
+def lathe(name, pts_mm, steps=128):
+    """Solido di rivoluzione attorno a Z da un profilo (raggio, quota) in mm."""
+    bm = bmesh.new()
+    verts = [bm.verts.new((r * MM, 0.0, z * MM)) for r, z in pts_mm]
+    edges = [bm.edges.new((verts[i], verts[i + 1])) for i in range(len(verts) - 1)]
+    bmesh.ops.spin(bm, geom=verts + edges, cent=(0, 0, 0), axis=(0, 0, 1), dvec=(0, 0, 0),
+                   angle=math.tau, steps=steps, use_merge=True)
+    bmesh.ops.remove_doubles(bm, verts=bm.verts, dist=1e-6)
+    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    return mesh_from_bmesh(name, bm)
+
+
+def look_at(ob, target):
+    direction = Vector(target) - ob.location
+    ob.rotation_euler = direction.to_track_quat('-Z', 'Y').to_euler()
+
+
+def embedded_file(key, prefix):
+    """Scrive su disco un file incorporato dalla pagina (data URL o base64) e ne restituisce il percorso."""
+    if not EMBEDDED or not EMBEDDED.get(key):
+        return None
+    item = EMBEDDED[key]
+    if isinstance(item, str):
+        item = {'data': item, 'name': prefix}
+    data = item['data']
+    ext = item.get('ext')
+    if data.startswith('data:'):
+        head, data = data.split(',', 1)
+        if not ext:
+            ext = {'image/png': 'png', 'image/jpeg': 'jpg', 'image/webp': 'webp'}.get(head[5:].split(';')[0], 'png')
+    path = os.path.join(tempfile.gettempdir(), f'{prefix}.{ext or "bin"}')
+    with open(path, 'wb') as f:
+        f.write(base64.b64decode(data))
+    return path
+
+
+# ---------------------------------------------------------------- geometria
+
+def outer_profile(b, neck='anello'):
+    R, H, a = b['R'], b['H'], min(NECK_R + 2.5, b['R'] - 2.0)
+    pts = [(0, 0), (R * 0.72, 0), (R * 0.92, 1.2), (R * 0.99, 3), (R, 6), (R, b['body'])]
+    n = 16
+    for i in range(1, n + 1):
+        t = i / n
+        r = a + (R - a) * (1 - t ** b['p']) ** (1 / b['p'])
+        pts.append((r, b['body'] + t * b['shoulder']))
+    y0 = b['body'] + b['shoulder']
+    if neck == 'dritto':
+        pts += [(a - 0.9, y0 + 3), (NECK_R + 0.3, y0 + 8), (NECK_R, y0 + 12), (NECK_R, H)]
+    else:
+        pts += [(a - 0.9, y0 + 3), (NECK_R + 1.0, y0 + 8), (NECK_R + 0.4, y0 + 14), (NECK_R - 0.4, H - 28),
+                (NECK_R + 1.0, H - 23), (NECK_R + 1.0, H - 19), (NECK_R, H - 17), (NECK_R, H)]
+    return pts
+
+
+def inner_profile(b):
+    R, H, a = b['R'], b['H'], min(NECK_R + 2.5, b['R'] - 2.0)
+    y0 = b['body'] + b['shoulder']
+    ri = min(INNER_NECK_R, NECK_R - 4.0)
+    pts = [(ri, H), (ri, y0 + 14), (ri + 0.6, y0 + 8), (max(a - WALL - 0.6, ri), y0 + 3)]
+    n = 12
+    for i in range(n, 0, -1):
+        t = i / n
+        r = a + (R - a) * (1 - t ** b['p']) ** (1 / b['p']) - WALL
+        pts.append((max(r, ri), b['body'] + t * b['shoulder']))
+    pts += [(R - WALL, b['body']), (R - WALL, 9.5), (R * 0.7, 7.5), (0, 7.0)]
+    return pts
+
+
+def build_bottle(b, glass_mat, oil_mat, neck='anello'):
+    bottle = lathe('Bottiglia', outer_profile(b, neck) + inner_profile(b))
+    bottle.data.materials.append(glass_mat)
+    R = b['R']
+    oil_top = b['body'] - 6.0
+    oil = lathe('Olio', [(0, 7.25), (R * 0.7, 7.75), (R - WALL - 0.08, 9.75),
+                         (R - WALL - 0.08, oil_top), (0, oil_top)], steps=96)
+    oil.data.materials.append(oil_mat)
+    return bottle, oil
+
+
+def build_cap(b, cap_mat, spout=True):
+    H = b['H']
+    cr = NECK_R + 0.65
+    cap = lathe('Tappo', [(0, H - 12), (cr, H - 12), (cr + 1.0, H - 10.5), (cr + 0.6, H + 13), (cr - 0.9, H + 14), (0, H + 14)], steps=96)
+    cap.data.materials.append(cap_mat)
+    if not spout:
+        return cap, None
+    spout_mat = bpy.data.materials.new('Beccuccio')
+    spout_mat.use_nodes = True
+    bsdf = spout_mat.node_tree.nodes['Principled BSDF']
+    bsdf.inputs['Base Color'].default_value = (0.02, 0.02, 0.02, 1)
+    bsdf.inputs['Roughness'].default_value = 0.5
+    spout = lathe('Beccuccio', [(0, H + 14), (8, H + 14), (6, H + 20), (4.5, H + 20), (4.5, H + 15), (0, H + 15)], steps=48)
+    spout.data.materials.append(spout_mat)
+    return cap, spout
+
+
+def import_model(path, real_h_mm, glass_mat):
+    """Importa GLB/glTF, OBJ o STL, lo raddrizza, lo scala all'altezza reale e lo appoggia a terra."""
+    ext = os.path.splitext(path)[1].lower()
+    before = set(bpy.data.objects)
+    if ext in ('.glb', '.gltf'):
+        bpy.ops.import_scene.gltf(filepath=path)
+    elif ext == '.obj':
+        bpy.ops.wm.obj_import(filepath=path)
+    elif ext == '.stl':
+        try:
+            bpy.ops.wm.stl_import(filepath=path)
+        except AttributeError:
+            bpy.ops.import_mesh.stl(filepath=path)
+    else:
+        raise SystemExit(f'Formato non supportato per --model: {ext}. Usa GLB, glTF, OBJ o STL.')
+    objs = [o for o in bpy.data.objects if o not in before]
+    meshes = [o for o in objs if o.type == 'MESH']
+    if not meshes:
+        raise SystemExit('Il modello non contiene mesh.')
+    root = link_object(bpy.data.objects.new('Bottiglia da file', None))
+    for o in objs:
+        if o.parent is None or o.parent not in objs:
+            o.parent = root
+
+    def bounds():
+        bpy.context.view_layer.update()
+        pts = [o.matrix_world @ Vector(c) for o in meshes for c in o.bound_box]
+        lo = Vector((min(p.x for p in pts), min(p.y for p in pts), min(p.z for p in pts)))
+        hi = Vector((max(p.x for p in pts), max(p.y for p in pts), max(p.z for p in pts)))
+        return lo, hi
+
+    lo, hi = bounds()
+    ext3 = hi - lo
+    if ext3.y > ext3.z and ext3.y >= ext3.x:
+        root.rotation_euler = (math.radians(90), 0, 0)      # l'asse lungo era Y: lo porto su Z
+    elif ext3.x > ext3.z and ext3.x > ext3.y:
+        root.rotation_euler = (0, math.radians(-90), 0)     # l'asse lungo era X
+    lo, hi = bounds()
+    h = max(1e-9, hi.z - lo.z)
+    root.scale = (real_h_mm * MM / h,) * 3
+    lo, hi = bounds()
+    root.location = (-(lo.x + hi.x) / 2, -(lo.y + hi.y) / 2, -lo.z)
+    lo, hi = bounds()
+    for o in meshes:
+        o.data.materials.clear()
+        o.data.materials.append(glass_mat)
+    radius_mm = max(hi.x - lo.x, hi.y - lo.y) / 2 / MM
+    return root, dict(name=os.path.basename(path), R=radius_mm, H=real_h_mm, body=real_h_mm * 0.6)
+
+
+def build_label(name, b, width_mm, height_mm, bottom_mm, center_angle, mat, segments=128, radius_mm=None):
+    """Fascia cilindrica con UV 0..1: l'immagine si avvolge senza distorsioni."""
+    R = radius_mm or b['R']
+    circ = math.tau * R
+    if width_mm > circ:
+        print(f'[avviso] {name}: larghezza {width_mm:.0f} mm oltre la circonferenza ({circ:.0f} mm), ridotta.')
+        width_mm = circ - 0.5
+    half = (width_mm / R) / 2.0
+    r = (R + 0.15) * MM
+    bm = bmesh.new()
+    uv_layer = bm.loops.layers.uv.new('UVMap')
+    columns = []
+    for i in range(segments + 1):
+        u = i / segments
+        phi = center_angle - half + u * 2 * half
+        x, y = r * math.sin(phi), -r * math.cos(phi)
+        columns.append((bm.verts.new((x, y, bottom_mm * MM)),
+                        bm.verts.new((x, y, (bottom_mm + height_mm) * MM)), u))
+    for i in range(segments):
+        a0, a1, ua = columns[i]
+        b0, b1, ub = columns[i + 1]
+        f = bm.faces.new((a0, b0, b1, a1))
+        uvs = {a0: (ua, 0.0), b0: (ub, 0.0), b1: (ub, 1.0), a1: (ua, 1.0)}
+        for loop in f.loops:
+            loop[uv_layer].uv = uvs[loop.vert]
+    ob = mesh_from_bmesh(name, bm, sharp_angle=math.radians(89))
+    ob.data.materials.append(mat)
+    return ob, width_mm
+
+
+# ---------------------------------------------------------------- materiali
+
+def new_material(name):
+    mat = bpy.data.materials.new(name)
+    mat.use_nodes = True
+    nt = mat.node_tree
+    return mat, nt, nt.nodes['Principled BSDF'], nt.nodes['Material Output']
+
+
+def glass_material(g):
+    mat, nt, bsdf, out = new_material('Vetro')
+    bsdf.inputs['Base Color'].default_value = g['color']
+    bsdf.inputs['Roughness'].default_value = 0.02
+    bsdf.inputs['IOR'].default_value = 1.50
+    set_input(bsdf, ['Transmission Weight', 'Transmission'], 1.0)
+    set_input(bsdf, ['Specular IOR Level', 'Specular'], 0.5)
+    vol = nt.nodes.new('ShaderNodeVolumeAbsorption')
+    vol.inputs['Color'].default_value = (*g['absorb'], 1.0)
+    vol.inputs['Density'].default_value = g['density']
+    nt.links.new(vol.outputs['Volume'], out.inputs['Volume'])
+    return mat
+
+
+def oil_material():
+    mat, nt, bsdf, out = new_material('Olio')
+    bsdf.inputs['Base Color'].default_value = (0.92, 0.74, 0.22, 1.0)
+    bsdf.inputs['Roughness'].default_value = 0.04
+    bsdf.inputs['IOR'].default_value = 1.47
+    set_input(bsdf, ['Transmission Weight', 'Transmission'], 1.0)
+    vol = nt.nodes.new('ShaderNodeVolumeAbsorption')
+    vol.inputs['Color'].default_value = (0.95, 0.76, 0.22, 1.0)
+    vol.inputs['Density'].default_value = 28.0
+    nt.links.new(vol.outputs['Volume'], out.inputs['Volume'])
+    return mat
+
+
+def cap_material(c):
+    mat, nt, bsdf, out = new_material('Tappo')
+    bsdf.inputs['Base Color'].default_value = c['color']
+    bsdf.inputs['Metallic'].default_value = c['metallic']
+    bsdf.inputs['Roughness'].default_value = c['roughness']
+    return mat
+
+
+def placeholder_image(name='etichetta_segnaposto', w=720, h=960):
+    """Etichetta crema con cornice verde e fascia oro, quando non viene passato un file."""
+    import numpy as np
+    px = np.empty((h, w, 4), dtype=np.float32)
+    px[:] = (0.86, 0.80, 0.64, 1.0)
+    frame, thick = 28, 5
+    px[frame:frame + thick, frame:w - frame] = (0.16, 0.22, 0.07, 1)
+    px[h - frame - thick:h - frame, frame:w - frame] = (0.16, 0.22, 0.07, 1)
+    px[frame:h - frame, frame:frame + thick] = (0.16, 0.22, 0.07, 1)
+    px[frame:h - frame, w - frame - thick:w - frame] = (0.16, 0.22, 0.07, 1)
+    px[int(h * 0.56):int(h * 0.56) + 6, int(w * 0.35):int(w * 0.65)] = (0.62, 0.42, 0.08, 1)
+    px[int(h * 0.30):int(h * 0.48), int(w * 0.28):int(w * 0.72)] = (0.28, 0.36, 0.14, 1)
+    img = bpy.data.images.new(name, w, h, alpha=True)
+    img.pixels.foreach_set(px[::-1].ravel())
+    img.pack()
+    return img
+
+
+def label_material(name, image, finish):
+    mat, nt, bsdf, out = new_material(name)
+    tex = nt.nodes.new('ShaderNodeTexImage')
+    tex.image = image
+    tex.interpolation = 'Cubic'
+    geo = nt.nodes.new('ShaderNodeNewGeometry')
+    mix = nt.nodes.new('ShaderNodeMixRGB')          # fronte: immagine; retro della carta: bianco caldo
+    mix.inputs['Color2'].default_value = (0.90, 0.88, 0.82, 1.0)
+    nt.links.new(geo.outputs['Backfacing'], mix.inputs['Fac'])
+    nt.links.new(tex.outputs['Color'], mix.inputs['Color1'])
+    nt.links.new(mix.outputs['Color'], bsdf.inputs['Base Color'])
+    nt.links.new(tex.outputs['Alpha'], bsdf.inputs['Alpha'])
+    if finish == 'lucida':
+        bsdf.inputs['Roughness'].default_value = 0.30
+        set_input(bsdf, ['Coat Weight', 'Clearcoat'], 0.8)
+        set_input(bsdf, ['Coat Roughness', 'Clearcoat Roughness'], 0.10)
+    else:
+        bsdf.inputs['Roughness'].default_value = 0.62
+        set_input(bsdf, ['Specular IOR Level', 'Specular'], 0.35)
+    for attr, val in (('surface_render_method', 'DITHERED'), ('blend_method', 'HASHED')):
+        try:
+            setattr(mat, attr, val)
+        except Exception:
+            pass
+    return mat
+
+
+def floor_material():
+    mat, nt, bsdf, out = new_material('Pavimento')
+    bsdf.inputs['Base Color'].default_value = (0.45, 0.44, 0.40, 1.0)
+    bsdf.inputs['Roughness'].default_value = 0.75
+    return mat
+
+
+# ---------------------------------------------------------------- scena
+
+def add_area(name, location, target, size, power, color=(1.0, 1.0, 1.0)):
+    ld = bpy.data.lights.new(name, 'AREA')
+    ld.energy, ld.size, ld.color = power, size, color
+    ob = link_object(bpy.data.objects.new(name, ld))
+    ob.location = location
+    look_at(ob, target)
+    return ob
+
+
+def setup_render(scene, args):
+    scene.render.engine = 'CYCLES'
+    cy = scene.cycles
+    cy.samples = args.samples
+    cy.use_denoising = True
+    cy.max_bounces = 12
+    cy.transmission_bounces = 12
+    cy.transparent_max_bounces = 12
+    cy.glossy_bounces = 6
+    cy.volume_bounces = 2
+    try:
+        prefs = bpy.context.preferences.addons['cycles'].preferences
+        prefs.compute_device_type = 'METAL'
+        prefs.refresh_devices()
+        for d in prefs.devices:
+            d.use = True
+        cy.device = 'GPU'
+        print('[cycles] GPU Metal')
+    except Exception as e:
+        cy.device = 'CPU'
+        print('[cycles] CPU', e)
+    scene.render.resolution_x, scene.render.resolution_y = args.res
+    scene.render.resolution_percentage = 100
+    scene.render.film_transparent = args.transparent
+    scene.render.image_settings.file_format = 'PNG'
+    scene.render.image_settings.color_mode = 'RGBA' if args.transparent else 'RGB'
+    scene.render.image_settings.color_depth = '8'
+    try:
+        scene.view_settings.view_transform = args.view
+    except TypeError:
+        scene.view_settings.view_transform = 'Standard'
+    scene.view_settings.look = 'None'
+    scene.view_settings.exposure = 0.0
+
+
+def reset_scene():
+    """In background riparto da un file vuoto; con Blender aperto svuoto la scena corrente senza toccare l'interfaccia."""
+    if bpy.app.background:
+        bpy.ops.wm.read_factory_settings(use_empty=True)
+        return
+    scene = bpy.context.scene
+    for ob in list(scene.objects):
+        bpy.data.objects.remove(ob, do_unlink=True)
+    for coll in (bpy.data.meshes, bpy.data.materials, bpy.data.lights, bpy.data.cameras):
+        for block in list(coll):
+            if block.users == 0:
+                coll.remove(block)
+
+
+def show_in_viewport():
+    """Con Blender aperto: anteprima materiali e vista dalla camera."""
+    try:
+        for window in bpy.context.window_manager.windows:
+            for area in window.screen.areas:
+                if area.type == 'VIEW_3D':
+                    for space in area.spaces:
+                        if space.type == 'VIEW_3D':
+                            space.shading.type = 'MATERIAL'
+                            space.region_3d.view_perspective = 'CAMERA'
+    except Exception:
+        pass
+
+
+def main():
+    global NECK_R
+    args = parse_args()
+    if not bpy.app.background:
+        args.no_render = True
+    reset_scene()
+    scene = bpy.context.scene
+    scene.unit_settings.system = 'METRIC'
+    scene.unit_settings.length_unit = 'MILLIMETERS'
+
+    b = dict(BOTTLES[args.bottle if args.bottle in BOTTLES else 'marasca500'])
+    if args.bottle == 'custom':
+        b['name'] = 'Personalizzata'
+    if args.diameter:
+        b['R'] = args.diameter / 2
+    if args.height:
+        b['H'] = args.height
+    if args.body:
+        b['body'] = args.body
+    if args.shoulder:
+        b['shoulder'] = args.shoulder
+    if args.shoulder_shape:
+        b['p'] = args.shoulder_shape
+    if args.neck_diameter:
+        NECK_R = args.neck_diameter / 2
+    H = b['H']
+
+    glass_mat = glass_material(GLASS[args.glass])
+    model_path = args.model or embedded_file('model', 'mockup_marasca_bottiglia')
+    label_radius = args.label_radius
+    if model_path:
+        _, info = import_model(model_path, args.model_height, glass_mat)
+        b.update(info)
+        H = b['H']
+        label_radius = label_radius or b['R']
+    else:
+        build_bottle(b, glass_mat, oil_material(), args.neck)
+        build_cap(b, cap_material(cap_spec(args)), spout=not args.no_spout)
+
+    # etichetta fronte (rivolta verso -Y, dove sta la camera con --angle 0)
+    front_path = args.label or embedded_file('label_front', 'mockup_marasca_etichetta_fronte')
+    if front_path:
+        front_img = bpy.data.images.load(os.path.abspath(front_path))
+        front_img.pack()
+    else:
+        print('[avviso] nessun file passato con --label: uso un\'etichetta segnaposto.')
+        front_img = placeholder_image()
+    aspect = front_img.size[1] / front_img.size[0]
+    front_h = args.label_height if args.label_height else args.label_width * aspect
+    front_h = min(front_h, b['body'] - 4.0)
+    bottom = max(0.0, min(args.label_bottom, b['body'] - front_h))
+    _, front_w = build_label('Etichetta fronte', b, args.label_width, front_h, bottom, 0.0,
+                             label_material('Etichetta fronte', front_img, args.finish), radius_mm=label_radius)
+
+    back_w = back_h = None
+    back_path = args.back or embedded_file('label_back', 'mockup_marasca_etichetta_retro')
+    if back_path:
+        back_img = bpy.data.images.load(os.path.abspath(back_path))
+        back_img.pack()
+        back_h = min(args.back_width * back_img.size[1] / back_img.size[0], b['body'] - 4.0)
+        _, back_w = build_label('Etichetta retro', b, args.back_width, back_h, bottom, math.pi,
+                                label_material('Etichetta retro', back_img, args.finish), radius_mm=label_radius)
+
+    # studio: pavimento, mondo, luci
+    bpy.ops.mesh.primitive_plane_add(size=6.0, location=(0, 0, 0))
+    floor = bpy.context.active_object
+    floor.name = 'Pavimento'
+    floor.data.materials.append(floor_material())
+    world = bpy.data.worlds.new('Studio')
+    scene.world = world
+    world.use_nodes = True
+    bg = world.node_tree.nodes['Background']
+    bg.inputs['Color'].default_value = (0.22, 0.22, 0.21, 1.0)
+    bg.inputs['Strength'].default_value = 1.0
+
+    target = (0.0, 0.0, H * 0.5 * MM)
+    add_area('Chiave', (0.50, -0.65, 0.70), target, 1.20, 26.0, (1.0, 0.96, 0.90))
+    add_area('Riempimento', (-0.85, -0.45, 0.35), target, 1.60, 8.0, (0.90, 0.93, 1.0))
+    add_area('Controluce', (-0.35, 0.75, 0.60), target, 0.80, 14.0)
+    add_area('Alto', (0.0, 0.10, 1.30), target, 2.00, 10.0)
+
+    # camera
+    cam_data = bpy.data.cameras.new('Camera')
+    cam_data.lens = 85.0
+    cam_data.sensor_fit = 'AUTO'
+    cam = link_object(bpy.data.objects.new('Camera', cam_data))
+    d = H * MM * 3.05
+    th = math.radians(args.angle)
+    cam.location = (d * math.sin(th), -d * math.cos(th), H * 0.56 * MM)
+    look_at(cam, (0.0, 0.0, H * 0.47 * MM))
+    scene.camera = cam
+
+    setup_render(scene, args)
+
+    circ = math.tau * (label_radius or b['R'])
+    print(f"[bottiglia] {b['name']}: Ø {2*b['R']:.0f} mm, h {H:.0f} mm, circonferenza {circ:.0f} mm, corpo dritto {b['body']:.0f} mm")
+    if not model_path:
+        print(f"[tappo] {'colore ' + args.cap_color if args.cap_color else args.cap}, collo {args.neck}, {'senza' if args.no_spout else 'con'} beccuccio")
+    print(f'[etichetta] fronte {front_w:.0f} × {front_h:.0f} mm, dal fondo {bottom:.0f} mm, copre il {100*front_w/circ:.0f} % del giro')
+    if back_w:
+        print(f'[etichetta] retro {back_w:.0f} × {back_h:.0f} mm')
+
+    if args.save_blend:
+        bpy.ops.wm.save_as_mainfile(filepath=os.path.abspath(args.save_blend))
+        print('[salvato]', os.path.abspath(args.save_blend))
+    if not bpy.app.background:
+        show_in_viewport()
+    if not args.no_render:
+        scene.render.filepath = os.path.abspath(args.out)
+        bpy.ops.render.render(write_still=True)
+        print('[render]', scene.render.filepath)
+
+
+if __name__ == '__main__':
+    main()
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/OBJLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/STLLoader.js"></script>
+<script>
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const clamp = (v,a,b) => Math.min(b, Math.max(a, v));
+const round = v => Math.round(v);
+const fmt = (v, d=0) => v.toFixed(d).replace('.', ',');
+const theme = document.documentElement.dataset.theme;
+const prefersDark = theme === 'dark' || (theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+
+// Quote tipiche (mm). neck = raggio dell'imboccatura, 15,75 = PP 31,5 per il tappo versatore.
+const PRESETS = {
+  marasca250:{ name:'Marasca 250 ml', R:26,   H:208, body:128, shoulder:12, p:2.4, neck:15.75 },
+  marasca500:{ name:'Marasca 500 ml', R:31.5, H:271, body:168, shoulder:15, p:2.4, neck:15.75 },
+  marasca750:{ name:'Marasca 750 ml', R:36,   H:300, body:186, shoulder:17, p:2.4, neck:15.75 },
+  dorica500: { name:'Dorica 500 ml',  R:30,   H:297, body:178, shoulder:34, p:1.5, neck:15.75 },
+};
+const GLASS = {
+  verde:       { color:0x1b3a17, opacity:0.94 },
+  trasparente: { color:0xe4efe2, opacity:0.30 },
+  ambra:       { color:0x5a2e08, opacity:0.92 },
+};
+const CAPS = {
+  nero:    { color:0x151515, metalness:0.15, roughness:0.45 },
+  oro:     { color:0xcaa64c, metalness:1.0,  roughness:0.28 },
+  argento: { color:0xd9d9d6, metalness:1.0,  roughness:0.25 },
+};
+const BACKDROPS = {
+  chiaro: { outer:'#d9d6c9', inner:'#f5f3eb' },
+  grigio: { outer:'#777a72', inner:'#a5a79f' },
+  scuro:  { outer:'#14160f', inner:'#2b2e25' },
+};
+
+const state = {
+  preset:'marasca500', dims: Object.assign({}, PRESETS.marasca500),
+  model:null,                      // bottiglia caricata da file, se presente
+  glass:'verde', cap:'nero', capColor:'#8a1c1c', capMetal:false, finish:'opaca', straightNeck:false, spout:true,
+  backdrop: prefersDark ? 'scuro' : 'chiaro', spin:true, lock:true,
+  front:{ tex:null, aspect:120/90, name:'Etichetta di esempio', px:null, w:90, h:120, bottom:32, sample:true },
+  back: { tex:null, aspect:1, name:'', px:null, w:60, h:60 },
+};
+// la bottiglia corrente: quella da file se caricata, altrimenti quella parametrica
+const cur = () => state.model || state.dims;
+
+// ---------- renderer / scena ----------
+const canvas = $('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true, alpha:false, preserveDrawingBuffer:true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const maxAniso = renderer.capabilities.getMaxAnisotropy();
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(28, 1, 5, 8000);
+
+const hemi = new THREE.HemisphereLight(0xffffff, 0x54513f, 0.5);
+scene.add(hemi);
+const key = new THREE.DirectionalLight(0xfff5e6, 1.0);
+key.position.set(320, 620, 480);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.near = 100; key.shadow.camera.far = 2000;
+key.shadow.camera.left = -260; key.shadow.camera.right = 260;
+key.shadow.camera.top = 480; key.shadow.camera.bottom = -60;
+key.shadow.bias = -0.0006; key.shadow.radius = 3;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0xdfe7f5, 0.35);
+fill.position.set(-520, 260, 260);
+scene.add(fill);
+const rim = new THREE.DirectionalLight(0xffffff, 0.45);
+rim.position.set(-160, 420, -520);
+scene.add(rim);
+
+// ambiente riflesso: softbox disegnati su tela
+function face(paint){
+  const s = 256, c = document.createElement('canvas'); c.width = c.height = s;
+  const g = c.getContext('2d'); paint(g, s); return c;
+}
+function grad(g, s, top, bottom){
+  const gr = g.createLinearGradient(0, 0, 0, s); gr.addColorStop(0, top); gr.addColorStop(1, bottom);
+  g.fillStyle = gr; g.fillRect(0, 0, s, s);
+}
+function softbox(g, s, x, y, w, h){ g.fillStyle = '#ffffff'; g.fillRect(x*s, y*s, w*s, h*s); }
+const envRaw = new THREE.CubeTexture([
+  face((g,s)=>{ grad(g,s,'#c9ccc4','#3c3e37'); softbox(g,s,0.32,0.08,0.14,0.62); }),
+  face((g,s)=>{ grad(g,s,'#c9ccc4','#3c3e37'); softbox(g,s,0.58,0.22,0.09,0.46); }),
+  face((g,s)=>{ g.fillStyle='#e2e4de'; g.fillRect(0,0,s,s); softbox(g,s,0.35,0.35,0.3,0.3); }),
+  face((g,s)=>{ g.fillStyle='#2a2b26'; g.fillRect(0,0,s,s); }),
+  face((g,s)=>{ grad(g,s,'#c9ccc4','#3c3e37'); softbox(g,s,0.18,0.14,0.64,0.22); }),
+  face((g,s)=>{ grad(g,s,'#b4b7af','#3c3e37'); }),
+]);
+envRaw.encoding = THREE.sRGBEncoding;
+envRaw.needsUpdate = true;
+const pmrem = new THREE.PMREMGenerator(renderer);
+pmrem.compileCubemapShader();
+const envMap = pmrem.fromCubemap(envRaw).texture;
+pmrem.dispose();
+
+// fondale da studio
+const groundGroup = new THREE.Group();
+scene.add(groundGroup);
+function buildBackdrop(){
+  const bd = BACKDROPS[state.backdrop];
+  disposeGroup(groundGroup);
+  const c = document.createElement('canvas'); c.width = c.height = 512;
+  const g = c.getContext('2d');
+  const gr = g.createRadialGradient(256,256,20,256,256,256);
+  gr.addColorStop(0, bd.inner); gr.addColorStop(0.55, bd.inner); gr.addColorStop(1, bd.outer);
+  g.fillStyle = gr; g.fillRect(0,0,512,512);
+  const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding;
+  const disc = new THREE.Mesh(new THREE.CircleGeometry(1800, 64), new THREE.MeshBasicMaterial({ map: tex }));
+  disc.rotation.x = -Math.PI/2; disc.position.y = -0.5;
+  groundGroup.add(disc);
+  const sh = new THREE.Mesh(new THREE.PlaneGeometry(1200, 1200), new THREE.ShadowMaterial({ opacity: state.backdrop==='scuro' ? 0.45 : 0.22 }));
+  sh.rotation.x = -Math.PI/2; sh.position.y = 0.2; sh.receiveShadow = true;
+  groundGroup.add(sh);
+  scene.background = new THREE.Color(bd.outer);
+  scene.fog = new THREE.Fog(new THREE.Color(bd.outer), 1400, 3200);
+  $('segBg').querySelectorAll('button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === state.backdrop)));
+}
+
+function disposeGroup(g){
+  while (g.children.length){
+    const m = g.children.pop();
+    m.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material && o.material.dispose) o.material.dispose(); });
+  }
+}
+
+// ---------- materiali del vetro ----------
+function glassMats(){
+  const gl = GLASS[state.glass];
+  const back = new THREE.MeshPhysicalMaterial({
+    color: gl.color, roughness: 0.06, metalness: 0, transparent: true, opacity: gl.opacity,
+    envMap, envMapIntensity: 0.7, side: THREE.BackSide, depthWrite: false,
+  });
+  const front = new THREE.MeshPhysicalMaterial({
+    color: gl.color, roughness: 0.05, metalness: 0, transparent: true, opacity: gl.opacity,
+    envMap, envMapIntensity: 1.1, clearcoat: 1, clearcoatRoughness: 0.04, side: THREE.FrontSide,
+  });
+  return { back, front };
+}
+
+// ---------- bottiglia parametrica ----------
+const bottleGroup = new THREE.Group();
+scene.add(bottleGroup);
+const modelGroup = new THREE.Group();
+scene.add(modelGroup);
+let labelGroup = new THREE.Group();
+scene.add(labelGroup);
+
+function profile(b){
+  const R = b.R, H = b.H, neck = b.neck, a = Math.min(neck + 2.5, R - 2);
+  const pts = [[0,0],[R*0.72,0],[R*0.92,1.2],[R*0.99,3],[R,6],[R,b.body]];
+  const N = 16;
+  for (let i=1;i<=N;i++){
+    const t = i/N;
+    const r = a + (R-a) * Math.pow(1 - Math.pow(t, b.p), 1/b.p);
+    pts.push([r, b.body + t*b.shoulder]);
+  }
+  const y0 = b.body + b.shoulder;
+  if (state.straightNeck){
+    pts.push([a-0.9, y0+3],[neck+0.3, y0+8],[neck, y0+12],[neck, H],[neck*0.7, H],[0, H]);
+  } else {
+    pts.push([a-0.9, y0+3],[neck+1.0, y0+8],[neck+0.4, y0+14]);
+    pts.push([neck-0.4, H-28]);
+    pts.push([neck+1.0, H-23],[neck+1.0, H-19],[neck, H-17],[neck, H],[neck*0.7, H],[0, H]);
+  }
+  return pts.map(p => new THREE.Vector2(p[0], p[1]));
+}
+
+function buildBottle(){
+  disposeGroup(bottleGroup);
+  bottleGroup.visible = !state.model;
+  const b = state.dims, gm = glassMats();
+  const cp = state.cap === 'custom'
+    ? { color: new THREE.Color(state.capColor), metalness: state.capMetal ? 1.0 : 0.1, roughness: state.capMetal ? 0.26 : 0.42 }
+    : CAPS[state.cap];
+  const geo = new THREE.LatheGeometry(profile(b), 112);
+  const back = new THREE.Mesh(geo, gm.back); back.renderOrder = 1;
+  const front = new THREE.Mesh(geo, gm.front); front.renderOrder = 2; front.castShadow = true;
+  bottleGroup.add(back, front);
+
+  const oilTop = b.body + b.shoulder*0.35;
+  const oil = new THREE.Mesh(
+    new THREE.CylinderGeometry(b.R-2.4, b.R-2.4, oilTop-3, 64),
+    new THREE.MeshStandardMaterial({ color: 0xc9a227, roughness: 0.3, metalness: 0, envMap, envMapIntensity: 0.4 })
+  );
+  oil.position.y = 3 + (oilTop-3)/2;
+  bottleGroup.add(oil);
+
+  const capMat = new THREE.MeshStandardMaterial({ color: cp.color, metalness: cp.metalness, roughness: cp.roughness, envMap, envMapIntensity: 1 });
+  const cr = b.neck + 1.25;
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(cr, cr+0.4, 26, 64), capMat);
+  cap.position.y = b.H + 1; cap.castShadow = true;
+  const capTop = new THREE.Mesh(new THREE.CylinderGeometry(cr*0.36, cr*0.48, 6, 48), new THREE.MeshStandardMaterial({ color: 0x1a1a1a, roughness: 0.5 }));
+  capTop.position.y = b.H + 17;
+  bottleGroup.add(cap);
+  if (state.spout) bottleGroup.add(capTop);
+
+  fitCamera(true);
+}
+
+// ---------- bottiglia da file ----------
+function guessMM(raw){
+  if (raw < 2) return raw*1000;      // metri
+  if (raw < 60) return raw*10;       // centimetri
+  return raw;                         // millimetri
+}
+function unitName(raw){ return raw < 2 ? 'metri' : raw < 60 ? 'centimetri' : 'millimetri'; }
+
+function layoutModel(){
+  const m = state.model; if (!m) return;
+  const root = m.root;
+  root.rotation.set(m.zUp ? -Math.PI/2 : 0, 0, 0);
+  root.scale.setScalar(1); root.position.set(0,0,0);
+  root.updateMatrixWorld(true);
+  let box = new THREE.Box3().setFromObject(root);
+  m.rawH = Math.max(1e-6, box.max.y - box.min.y);
+  if (!m.realH) m.realH = clamp(round(guessMM(m.rawH)), 80, 450);
+  root.scale.setScalar(m.realH / m.rawH);
+  root.updateMatrixWorld(true);
+  box = new THREE.Box3().setFromObject(root);
+  root.position.set(-(box.min.x+box.max.x)/2, -box.min.y, -(box.min.z+box.max.z)/2);
+  root.updateMatrixWorld(true);
+  m.H = m.realH;
+
+  // profilo radiale a fasce di 2 mm: serve per il raggio dell'etichetta e per stimare il corpo dritto
+  // campiono lungo gli spigoli dei triangoli, non solo sui vertici: un corpo cilindrico ha vertici solo agli estremi
+  const bin = 2, n = Math.ceil(m.H/bin) + 1, bins = new Float32Array(n);
+  const pa = new THREE.Vector3(), pb = new THREE.Vector3(), pc = new THREE.Vector3();
+  const addPt = (x, y, z) => {
+    const k = clamp(Math.floor(y/bin), 0, n-1);
+    const r = Math.hypot(x, z);
+    if (r > bins[k]) bins[k] = r;
+  };
+  const sampleEdge = (p, q) => {
+    const k = Math.min(240, Math.max(1, Math.ceil(Math.abs(q.y - p.y)/bin)));
+    for (let s=0;s<=k;s++){ const t = s/k; addPt(p.x+(q.x-p.x)*t, p.y+(q.y-p.y)*t, p.z+(q.z-p.z)*t); }
+  };
+  m.meshes.forEach(mesh => {
+    const pos = mesh.geometry.attributes.position; if (!pos) return;
+    const idx = mesh.geometry.index ? mesh.geometry.index.array : null;
+    const tris = idx ? Math.floor(idx.length/3) : Math.floor(pos.count/3);
+    const step = Math.max(1, Math.ceil(tris / 250000));
+    for (let t=0;t<tris;t+=step){
+      const i0 = idx ? idx[3*t] : 3*t, i1 = idx ? idx[3*t+1] : 3*t+1, i2 = idx ? idx[3*t+2] : 3*t+2;
+      pa.fromBufferAttribute(pos, i0).applyMatrix4(mesh.matrixWorld);
+      pb.fromBufferAttribute(pos, i1).applyMatrix4(mesh.matrixWorld);
+      pc.fromBufferAttribute(pos, i2).applyMatrix4(mesh.matrixWorld);
+      sampleEdge(pa, pb); sampleEdge(pb, pc); sampleEdge(pc, pa);
+    }
+  });
+  let Rmax = 0, imax = 0;
+  for (let i=0;i<n;i++) if (bins[i] > Rmax){ Rmax = bins[i]; imax = i; }
+  let i = imax;
+  while (i+1 < n && bins[i+1] >= 0.96*Rmax) i++;
+  m.R = Math.max(5, Rmax); m.bins = bins; m.bin = bin;
+  m.body = clamp((i+1)*bin, 30, m.H);
+}
+
+function applyModelMaterials(){
+  const m = state.model; if (!m) return;
+  m.twins.forEach(t => t.parent && t.parent.remove(t)); m.twins = [];
+  const gm = glassMats();
+  m.meshes.forEach(mesh => {
+    mesh.castShadow = true;
+    if (m.keep && mesh.userData.origMat){ mesh.material = mesh.userData.origMat; mesh.renderOrder = 0; return; }
+    mesh.material = gm.front; mesh.renderOrder = 2;
+    const twin = new THREE.Mesh(mesh.geometry, gm.back);
+    twin.renderOrder = 1; twin.matrixAutoUpdate = false; twin.matrix.copy(mesh.matrix);
+    mesh.parent.add(twin); m.twins.push(twin);
+  });
+}
+
+function installModel(root, name, file){
+  clearModel(false);
+  const holder = new THREE.Group(); holder.add(root);
+  const meshes = [];
+  holder.traverse(o => { if (o.isMesh){ meshes.push(o); o.userData.origMat = o.material; } });
+  if (!meshes.length) throw new Error('Il file non contiene geometria.');
+  // orientamento: se l'estensione in Z supera nettamente quella in Y, il file è Z-up (tipico dei CAD)
+  holder.updateMatrixWorld(true);
+  const box = new THREE.Box3().setFromObject(holder);
+  const ex = box.max.x-box.min.x, ey = box.max.y-box.min.y, ez = box.max.z-box.min.z;
+  state.model = { name, file, root: holder, meshes, twins: [], zUp: ez > ey*1.3 && ez >= ex, keep:false, realH:null, rawH:1, H:271, R:31.5, body:168, bins:null, bin:2 };
+  modelGroup.add(holder);
+  layoutModel(); applyModelMaterials();
+  bottleGroup.visible = false;
+  fitCamera(true); refreshAll();
+}
+
+function clearModel(refresh=true){
+  if (state.model){
+    disposeGroup(modelGroup);
+    state.model = null;
+  }
+  bottleGroup.visible = true;
+  $('inModel').value = '';
+  if (refresh){ fitCamera(true); refreshAll(); }
+}
+
+function loadModelFile(file){
+  if (!file) return;
+  const ext = (file.name.split('.').pop() || '').toLowerCase();
+  const warn = msg => { $('modelWarn').textContent = msg; $('modelWarn').hidden = false; };
+  $('modelWarn').hidden = true;
+  if (!['glb','gltf','obj','stl'].includes(ext)) { warn('Formati accettati: GLB, glTF, OBJ, STL. Per l\'etichetta serve invece un PNG o JPG.'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      if (ext === 'glb' || ext === 'gltf'){
+        if (!THREE.GLTFLoader) throw new Error('Il lettore glTF non si è caricato: controlla la connessione e ricarica la pagina.');
+        new THREE.GLTFLoader().parse(reader.result, '', gltf => {
+          try { installModel(gltf.scene, file.name, file); } catch(e){ warn(e.message); }
+        }, err => warn('Non riesco a leggere il glTF: ' + (err && err.message ? err.message : 'file esterni o compressione Draco non supportati. Esporta in GLB senza compressione.')));
+      } else if (ext === 'obj'){
+        if (!THREE.OBJLoader) throw new Error('Il lettore OBJ non si è caricato: controlla la connessione e ricarica la pagina.');
+        installModel(new THREE.OBJLoader().parse(reader.result), file.name, file);
+      } else {
+        if (!THREE.STLLoader) throw new Error('Il lettore STL non si è caricato: controlla la connessione e ricarica la pagina.');
+        const geo = new THREE.STLLoader().parse(reader.result);
+        geo.computeVertexNormals();
+        installModel(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0xcccccc })), file.name, file);
+      }
+    } catch(e){ warn('Non riesco a usare questo file: ' + e.message); }
+  };
+  reader.onerror = () => warn('Lettura del file fallita.');
+  if (ext === 'obj' || ext === 'gltf') reader.readAsText(file); else reader.readAsArrayBuffer(file);
+}
+
+// ---------- etichette ----------
+const paperBack = new THREE.MeshStandardMaterial({ color: 0xf1ede2, roughness: 0.95, side: THREE.BackSide });
+function labelMaterial(tex){
+  const glossy = state.finish === 'lucida';
+  return new THREE.MeshPhysicalMaterial({
+    map: tex, color: 0xffffff, roughness: glossy ? 0.28 : 0.82, metalness: 0,
+    envMap, envMapIntensity: glossy ? 0.9 : 0.35, clearcoat: glossy ? 0.8 : 0, clearcoatRoughness: 0.12,
+    transparent: true, alphaTest: 0.02, side: THREE.FrontSide,
+  });
+}
+// raggio del corpo nella fascia occupata dall'etichetta
+function labelRadius(bottom, h){
+  const b = cur();
+  if (!state.model || !b.bins) return b.R;
+  let r = 0;
+  const i0 = clamp(Math.floor(bottom/b.bin), 0, b.bins.length-1), i1 = clamp(Math.floor((bottom+h)/b.bin), 0, b.bins.length-1);
+  for (let i=i0;i<=i1;i++) r = Math.max(r, b.bins[i]);
+  return r > 1 ? r : b.R;
+}
+function labelMesh(L, centerTheta, bottom){
+  const Rb = labelRadius(bottom, L.h);
+  const R = Rb + 0.3;
+  const thetaLen = Math.min(Math.PI*2, L.w / Rb);
+  const geo = new THREE.CylinderGeometry(R, R, L.h, 128, 1, true, centerTheta - thetaLen/2, thetaLen);
+  const m = new THREE.Mesh(geo, labelMaterial(L.tex));
+  m.position.y = bottom + L.h/2; m.renderOrder = 3; m.castShadow = true;
+  const inner = new THREE.Mesh(geo, paperBack);
+  inner.position.y = m.position.y; inner.renderOrder = 0;
+  return [m, inner];
+}
+function rebuildLabels(){
+  disposeGroup(labelGroup);
+  labelGroup.add(...labelMesh(state.front, 0, state.front.bottom));
+  if (state.back.tex) labelGroup.add(...labelMesh(state.back, Math.PI, state.front.bottom));
+}
+
+let sampleTex = null, sampleCanvas = null;
+function drawSample(){
+  const k = 8, wmm = 90, hmm = 120;
+  const c = document.createElement('canvas'); c.width = wmm*k; c.height = hmm*k;
+  sampleCanvas = c;
+  const g = c.getContext('2d'); const W = c.width, H = c.height;
+  g.fillStyle = '#efe7d3'; g.fillRect(0,0,W,H);
+  g.strokeStyle = '#46551f'; g.lineWidth = k*0.55; g.strokeRect(k*3.5, k*3.5, W-k*7, H-k*7);
+  g.lineWidth = k*0.18; g.strokeRect(k*5.2, k*5.2, W-k*10.4, H-k*10.4);
+  g.textAlign = 'center'; g.textBaseline = 'middle';
+  if ('letterSpacing' in g) g.letterSpacing = (k*0.9)+'px';
+  g.fillStyle = '#2b3320';
+  g.font = `500 ${k*3.6}px "IBM Plex Sans", sans-serif`;
+  g.fillText('OLIO EXTRA VERGINE DI OLIVA', W/2, k*17);
+  if ('letterSpacing' in g) g.letterSpacing = '0px';
+  g.save(); g.translate(W/2, H*0.33); g.strokeStyle = '#5b6b2a'; g.lineWidth = k*0.35; g.lineCap='round';
+  g.beginPath(); g.moveTo(-W*0.22, k*4); g.quadraticCurveTo(0, -k*6, W*0.22, k*2); g.stroke();
+  g.fillStyle = '#6f8233';
+  const leaf = (x,y,ang,len)=>{ g.save(); g.translate(x,y); g.rotate(ang); g.beginPath(); g.ellipse(0,0,len,len*0.28,0,0,Math.PI*2); g.fill(); g.restore(); };
+  leaf(-W*0.15, -k*0.5, -0.9, k*5); leaf(-W*0.06, -k*3.6, -0.4, k*5.2); leaf(W*0.05, -k*3.4, 0.5, k*5.2); leaf(W*0.15, -k*0.6, 0.95, k*5);
+  leaf(-W*0.10, k*2.6, 0.6, k*4.4); leaf(W*0.10, k*2.4, -0.6, k*4.4);
+  g.fillStyle = '#2f3a1f'; g.beginPath(); g.arc(-k*1.2, k*1.2, k*1.7, 0, Math.PI*2); g.fill();
+  g.beginPath(); g.arc(k*2.4, k*0.4, k*1.5, 0, Math.PI*2); g.fill();
+  g.restore();
+  g.fillStyle = '#1f2617';
+  g.font = `italic 500 ${k*14}px Fraunces, Georgia, "Times New Roman", serif`;
+  g.fillText('Esempio', W/2, H*0.53);
+  g.fillStyle = '#a8791a'; g.fillRect(W/2 - k*9, H*0.615, k*18, k*0.35);
+  g.fillStyle = '#4b5340';
+  g.font = `400 ${k*2.9}px "IBM Plex Sans", sans-serif`;
+  g.fillText('etichetta di prova, sostituiscila con la tua', W/2, H*0.68);
+  g.fillText('carica il PNG esportato da Photoshop', W/2, H*0.68 + k*4.4);
+  g.fillStyle = '#2b3320';
+  g.font = `500 ${k*4.2}px "IBM Plex Sans", sans-serif`;
+  g.fillText('500 ml ℮', W/2, H - k*13);
+  const tex = new THREE.CanvasTexture(c); tex.encoding = THREE.sRGBEncoding; tex.anisotropy = maxAniso;
+  return tex;
+}
+
+// caricamento di un'immagine: da file, da trascinamento o dagli appunti
+function loadImageFile(file, which){
+  if (!file) return;
+  if (!/^image\//.test(file.type)) { alert('Serve un file immagine (PNG o JPG). In Photoshop usa «File → Esporta → Esporta come…».'); return; }
+  const reader = new FileReader();
+  reader.onload = () => {
+    const img = new Image();
+    img.onload = () => {
+      const tex = new THREE.Texture(img);
+      tex.encoding = THREE.sRGBEncoding; tex.anisotropy = maxAniso; tex.needsUpdate = true;
+      const L = state[which];
+      if (L.tex && L.tex !== sampleTex) L.tex.dispose();
+      L.tex = tex; L.sample = false;
+      L.aspect = img.naturalHeight / img.naturalWidth;
+      L.name = file.name || 'immagine incollata'; L.px = [img.naturalWidth, img.naturalHeight];
+      L.dataUrl = reader.result;
+      L.h = round(L.w * L.aspect);
+      refreshAll();
+    };
+    img.onerror = () => alert('Non riesco a leggere questa immagine.');
+    img.src = reader.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+// ---------- vincoli e UI ----------
+const circ = () => 2*Math.PI*cur().R;
+function constrainDims(){
+  const d = state.dims;
+  d.R = clamp(d.R, 15, 60); d.H = clamp(d.H, 100, 450);
+  d.shoulder = clamp(d.shoulder, 4, 80);
+  d.body = clamp(d.body, 30, d.H - d.shoulder - 45);
+  d.shoulder = clamp(d.shoulder, 4, d.H - d.body - 45);
+  d.neck = clamp(d.neck, 7, d.R - 6); d.p = clamp(d.p, 1.2, 3.5);
+}
+function constrain(){
+  const b = cur(), F = state.front, B = state.back;
+  const maxH = Math.max(20, b.body - 4);
+  F.w = clamp(F.w, 20, round(circ()));
+  F.h = clamp(F.h, 20, maxH);
+  if (state.lock && F.h > maxH) F.w = clamp(round(F.h / F.aspect), 20, round(circ()));
+  F.bottom = clamp(F.bottom, 0, Math.max(0, b.body - F.h));
+  B.w = clamp(B.w, 20, round(circ()));
+  B.h = clamp(round(B.w * B.aspect), 20, maxH);
+}
+function syncUI(){
+  const b = cur(), d = state.dims, F = state.front, B = state.back, C = circ(), m = state.model;
+  const maxH = Math.max(20, b.body - 4);
+  const set = (id, v) => { const el = $(id); if (el.value !== String(v)) el.value = v; };
+  ['rW','nW'].forEach(id => { $(id).max = round(C); set(id, F.w); });
+  ['rH','nH'].forEach(id => { $(id).max = maxH; set(id, F.h); });
+  ['rB','nB'].forEach(id => { $(id).max = Math.max(0, b.body - F.h); set(id, F.bottom); });
+  ['rBW','nBW'].forEach(id => { $(id).max = round(C); set(id, B.w); });
+  $('wLabel').textContent = fmt(F.w)+' mm'; $('hLabel').textContent = fmt(F.h)+' mm'; $('bLabel').textContent = fmt(F.bottom)+' mm';
+  $('bwLabel').textContent = fmt(B.w)+' × '+fmt(B.h)+' mm';
+  $('lock').checked = state.lock; $('spin').checked = state.spin;
+  $('straightNeck').checked = state.straightNeck; $('spout').checked = state.spout;
+  $('capCustom').hidden = state.cap !== 'custom';
+  set('capColor', state.capColor); $('capMetal').checked = state.capMetal;
+
+  // quote della bottiglia parametrica
+  set('selBottle', state.preset);
+  set('dR', d.R*2); set('dH', d.H); set('dNeck', d.neck*2); set('dBody', d.body); set('dShoulder', d.shoulder); set('dP', d.p);
+  ['selBottle','dR','dH','dNeck','dBody','dShoulder','dP','selCap','capColor','capMetal','straightNeck','spout'].forEach(id => { $(id).disabled = !!m; });
+  $('modelBanner').hidden = !m;
+
+  // bottiglia da file
+  $('modelTools').hidden = !m;
+  if (m){
+    $('modelBannerName').textContent = `Bottiglia dal file ${m.name}`;
+    $('modelName').textContent = m.name;
+    $('modelMeta').textContent = `Nel file misura ${fmt(m.rawH, m.rawH < 10 ? 3 : 1)} unità in altezza, lette come ${unitName(m.rawH)}. Correggi l'altezza reale se non torna.`;
+    ['rMH','nMH'].forEach(id => set(id, m.realH));
+    $('mhLabel').textContent = fmt(m.realH)+' mm';
+    $('zUp').checked = m.zUp; $('keepMat').checked = m.keep;
+  } else {
+    $('modelName').textContent = 'Nessun file';
+    $('modelMeta').textContent = 'Il modello del vetraio o un vostro file 3D. Sostituisce la bottiglia parametrica.';
+  }
+
+  $('frontName').textContent = F.name;
+  $('frontMeta').textContent = F.sample ? 'Generata qui, 90 × 120 mm' : `${F.px[0]} × ${F.px[1]} px, proporzione ${F.aspect.toFixed(3).replace('.',',')}`;
+  const hasBack = !!B.tex;
+  $('backName').textContent = hasBack ? B.name : 'Nessuna';
+  $('backMeta').textContent = hasBack ? `${B.px[0]} × ${B.px[1]} px, altezza ${fmt(B.h)} mm` : 'Stessa distanza dal fondo del fronte';
+  $('backField').hidden = !hasBack; $('btnBackClear').hidden = !hasBack;
+
+  const Rl = labelRadius(F.bottom, F.h), Cl = 2*Math.PI*Rl;
+  const pct = Math.round(100*F.w/Cl);
+  $('warnW').hidden = F.w < Cl - 0.5;
+  $('warnW').textContent = `La larghezza raggiunge la circonferenza (${fmt(Cl)} mm): l'etichetta si chiude su se stessa.`;
+  const name = m ? m.name : (state.preset === 'custom' ? 'Personalizzata' : PRESETS[state.preset].name);
+  $('info').innerHTML =
+    `<span>Corpo</span><b class="mono">Ø ${fmt(b.R*2)} mm</b>` +
+    `<span>Circonferenza</span><b class="mono">${fmt(C)} mm</b>` +
+    `<span>Altezza totale</span><b class="mono">${fmt(b.H)} mm</b>` +
+    `<span>Zona etichettabile</span><b class="mono">${fmt(b.body)} mm</b>` +
+    (m && Math.abs(Rl - b.R) > 0.5 ? `<span>Ø all'etichetta</span><b class="mono">${fmt(Rl*2)} mm</b>` : '') +
+    `<span>L'etichetta copre</span><b class="mono">${pct} %</b>`;
+  $('dims').textContent = `${name} · Ø ${fmt(b.R*2)} · h ${fmt(b.H)} mm · etichetta ${fmt(F.w)} × ${fmt(F.h)} mm`;
+}
+
+function refreshAll(){ constrain(); rebuildLabels(); syncUI(); }
+function onW(v){ const F = state.front; F.w = +v; if (state.lock) F.h = round(F.w * F.aspect); refreshAll(); }
+function onH(v){ const F = state.front; F.h = +v; if (state.lock) F.w = round(F.h / F.aspect); refreshAll(); }
+function onB(v){ state.front.bottom = +v; refreshAll(); }
+function onBW(v){ state.back.w = +v; refreshAll(); }
+['rW','nW'].forEach(id => $(id).addEventListener('input', e => onW(e.target.value)));
+['rH','nH'].forEach(id => $(id).addEventListener('input', e => onH(e.target.value)));
+['rB','nB'].forEach(id => $(id).addEventListener('input', e => onB(e.target.value)));
+['rBW','nBW'].forEach(id => $(id).addEventListener('input', e => onBW(e.target.value)));
+$('lock').addEventListener('change', e => { state.lock = e.target.checked; if (state.lock){ state.front.h = round(state.front.w*state.front.aspect); refreshAll(); } });
+$('spin').addEventListener('change', e => { state.spin = e.target.checked; });
+
+// quote della bottiglia: i preset sono un punto di partenza, ogni modifica passa a "Personalizzata"
+$('selBottle').addEventListener('change', e => {
+  const v = e.target.value;
+  state.preset = v;
+  if (v !== 'custom') Object.assign(state.dims, PRESETS[v]);
+  constrainDims(); buildBottle(); refreshAll();
+});
+function onDim(key, v, scale=1){
+  const n = parseFloat(String(v).replace(',', '.'));
+  if (!isFinite(n)) return;
+  state.dims[key] = n*scale;
+  state.preset = 'custom';
+  constrainDims(); buildBottle(); refreshAll();
+}
+$('dR').addEventListener('change', e => onDim('R', e.target.value, 0.5));
+$('dH').addEventListener('change', e => onDim('H', e.target.value));
+$('dNeck').addEventListener('change', e => onDim('neck', e.target.value, 0.5));
+$('dBody').addEventListener('change', e => onDim('body', e.target.value));
+$('dShoulder').addEventListener('change', e => onDim('shoulder', e.target.value));
+$('dP').addEventListener('input', e => onDim('p', e.target.value));
+
+$('selGlass').addEventListener('change', e => { state.glass = e.target.value; buildBottle(); applyModelMaterials(); });
+$('selCap').addEventListener('change', e => { state.cap = e.target.value; buildBottle(); refreshAll(); });
+$('capColor').addEventListener('input', e => { state.capColor = e.target.value; buildBottle(); });
+$('capMetal').addEventListener('change', e => { state.capMetal = e.target.checked; buildBottle(); });
+$('straightNeck').addEventListener('change', e => { state.straightNeck = e.target.checked; buildBottle(); refreshAll(); });
+$('spout').addEventListener('change', e => { state.spout = e.target.checked; buildBottle(); });
+$('selFinish').addEventListener('change', e => { state.finish = e.target.value; rebuildLabels(); });
+$('segBg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; state.backdrop = b.dataset.v; buildBackdrop(); });
+$('btnWrap').addEventListener('click', () => { const F = state.front; F.w = round(2*Math.PI*labelRadius(F.bottom, F.h)) - 3; if (state.lock) F.h = round(F.w*F.aspect); refreshAll(); });
+$('btnStd').addEventListener('click', () => { const F = state.front; F.w = 90; F.h = state.lock ? round(90*F.aspect) : 120; F.bottom = 32; refreshAll(); });
+
+// etichette: pulsante, selettore file, trascinamento, appunti
+$('btnPick').addEventListener('click', () => $('inFront').click());
+$('inFront').addEventListener('change', e => loadImageFile(e.target.files[0], 'front'));
+$('inBack').addEventListener('change', e => loadImageFile(e.target.files[0], 'back'));
+$('btnBackClear').addEventListener('click', () => { const B = state.back; if (B.tex) B.tex.dispose(); B.tex = null; B.name=''; B.px=null; $('inBack').value=''; refreshAll(); });
+$('fileFront').addEventListener('dragover', e => e.preventDefault());
+$('fileFront').addEventListener('drop', e => { e.preventDefault(); loadImageFile(e.dataTransfer.files && e.dataTransfer.files[0], 'front'); });
+$('fileBack').addEventListener('dragover', e => e.preventDefault());
+$('fileBack').addEventListener('drop', e => { e.preventDefault(); loadImageFile(e.dataTransfer.files && e.dataTransfer.files[0], 'back'); });
+window.addEventListener('paste', e => {
+  const items = e.clipboardData && e.clipboardData.items; if (!items) return;
+  for (const it of items){
+    if (it.type && it.type.startsWith('image/')){
+      const f = it.getAsFile(); if (!f) continue;
+      e.preventDefault();
+      loadImageFile(new File([f], 'immagine incollata.' + (it.type.split('/')[1] || 'png'), { type: f.type }), 'front');
+      return;
+    }
+  }
+});
+
+// bottiglia da file
+$('inModel').addEventListener('change', e => loadModelFile(e.target.files[0]));
+$('btnModelClear').addEventListener('click', () => clearModel(true));
+['rMH','nMH'].forEach(id => $(id).addEventListener('input', e => {
+  const m = state.model; if (!m) return;
+  const n = parseFloat(e.target.value); if (!isFinite(n)) return;
+  m.realH = clamp(n, 80, 450); layoutModel(); applyModelMaterials(); fitCamera(true); refreshAll();
+}));
+$('zUp').addEventListener('change', e => { const m = state.model; if (!m) return; m.zUp = e.target.checked; layoutModel(); applyModelMaterials(); fitCamera(true); refreshAll(); });
+$('keepMat').addEventListener('change', e => { const m = state.model; if (!m) return; m.keep = e.target.checked; applyModelMaterials(); });
+
+// trascinamento sulla scena: immagine = etichetta, GLB/OBJ/STL = bottiglia
+const stage = $('stage'), veil = $('veil');
+let dragDepth = 0;
+stage.addEventListener('dragenter', e => { e.preventDefault(); dragDepth++; veil.hidden = false; });
+stage.addEventListener('dragover', e => { e.preventDefault(); e.dataTransfer.dropEffect = 'copy'; });
+stage.addEventListener('dragleave', () => { dragDepth = Math.max(0, dragDepth-1); if (!dragDepth) veil.hidden = true; });
+stage.addEventListener('drop', e => {
+  e.preventDefault(); dragDepth = 0; veil.hidden = true;
+  const f = e.dataTransfer.files && e.dataTransfer.files[0]; if (!f) return;
+  if (/^image\//.test(f.type)) loadImageFile(f, 'front'); else loadModelFile(f);
+});
+
+// ---------- esportazione per Blender ----------
+// Nella pagina pubblicata su claude.ai il salvataggio passa dalla capacità "downloads" (arriva dopo l'avvio, o mai);
+// nella copia locale basta un normale link di download.
+const inArtifact = !!(window.claude && typeof window.claude.use === 'function');
+let downloadsNS;
+if (inArtifact) window.claude.use('downloads').then(ns => { downloadsNS = ns; }, () => { downloadsNS = null; });
+if (!inArtifact && /^https?:$/.test(location.protocol)) $('siteLinks').hidden = false;
+const readAsDataUrl = file => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(file); });
+const safeName = s => String(s || '').replace(/'/g, '\u2019');
+
+async function buildBlenderScript(){
+  const tpl = $('blenderTemplate').textContent;
+  const d = state.dims, F = state.front, B = state.back, m = state.model;
+  const settings = {
+    bottle: state.preset, diameter: d.R*2, height: d.H, body: d.body, shoulder: d.shoulder, shoulder_shape: d.p, neck_diameter: d.neck*2,
+    glass: state.glass, cap: state.cap === 'custom' ? 'nero' : state.cap,
+    cap_color: state.cap === 'custom' ? state.capColor : null, cap_metal: state.cap === 'custom' && state.capMetal,
+    neck: state.straightNeck ? 'dritto' : 'anello', no_spout: !state.spout, finish: state.finish,
+    label_width: F.w, label_height: F.h, label_bottom: F.bottom, back_width: B.tex ? B.w : null,
+    model_height: m ? m.realH : null, label_radius: m ? labelRadius(F.bottom, F.h) : null,
+  };
+  const payload = {
+    generato: new Date().toISOString().slice(0, 10), settings,
+    label_front: F.dataUrl || (F.sample && sampleCanvas ? sampleCanvas.toDataURL('image/png') : null),
+    label_back: B.tex ? (B.dataUrl || null) : null,
+    model: m && m.file ? { name: safeName(m.name), ext: (m.name.split('.').pop() || '').toLowerCase(), data: (await readAsDataUrl(m.file)).split(',')[1] } : null,
+  };
+  const json = JSON.stringify(payload);
+  const header = "EMBEDDED = json.loads(r'''" + json + "''')  # dati incorporati dalla pagina web";
+  return tpl.replace(/^EMBEDDED = None.*$/m, () => header);
+}
+
+function showCopyFallback(text){
+  $('blenderText').value = text;
+  $('blenderCopy').hidden = false;
+  $('btnBlenderCopy').textContent = 'Copia negli appunti';
+}
+$('btnBlenderCopy').addEventListener('click', async () => {
+  const ta = $('blenderText'), b = $('btnBlenderCopy');
+  try { await navigator.clipboard.writeText(ta.value); b.textContent = 'Copiato: incollalo in Blender'; }
+  catch (e){ ta.focus(); ta.select(); b.textContent = 'Testo selezionato: premi ⌘C per copiare'; }
+});
+
+async function exportBlender(){
+  const btn = $('btnBlender'), warn = $('blenderWarn');
+  warn.hidden = true; $('blenderCopy').hidden = true; btn.disabled = true;
+  const old = btn.textContent; btn.textContent = 'Preparo il file…';
+  try {
+    const text = await buildBlenderScript();
+    if (inArtifact){
+      const ns = downloadsNS === undefined ? await window.claude.use('downloads') : downloadsNS;
+      if (!ns){ showCopyFallback(text); return; }
+      try { await ns.save({ filename: 'mockup-marasca-blender.txt', data: text }); }
+      catch (e){
+        const code = e && e.code;
+        if (code === 'declined') return;
+        if (['unavailable','not_granted','capability_disabled','capability_removed','extension_not_enabled','rejected_extension'].includes(code)){ showCopyFallback(text); return; }
+        throw e;
+      }
+    } else {
+      const a = document.createElement('a');
+      const url = URL.createObjectURL(new Blob([text], { type: 'text/x-python' }));
+      a.href = url; a.download = 'mockup-marasca-blender.py';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+  } catch (e){
+    const code = e && e.code;
+    if (code === 'declined') return;
+    if (code === 'rate_limited') warn.textContent = 'C\'è già una richiesta aperta: attendi un momento e riprova.';
+    else warn.textContent = 'Non riesco a preparare il file: ' + ((e && e.message) || code || e);
+    warn.hidden = false;
+  } finally { btn.disabled = false; btn.textContent = old; }
+}
+$('btnBlender').addEventListener('click', exportBlender);
+
+// ---------- camera orbitale ----------
+const target = new THREE.Vector3(0, 130, 0);
+let theta = 0.32, phi = 1.38, dist = 760, dragging = false;
+function fitCamera(resetView){
+  const b = cur();
+  target.set(0, b.H*0.5, 0);
+  if (resetView) dist = b.H*2.75;
+}
+function frontView(){ theta = 0.0; phi = 1.45; fitCamera(true); }
+function updateCamera(){
+  camera.position.set(
+    target.x + dist*Math.sin(phi)*Math.sin(theta),
+    target.y + dist*Math.cos(phi),
+    target.z + dist*Math.sin(phi)*Math.cos(theta));
+  camera.lookAt(target);
+}
+const pointers = new Map();
+canvas.addEventListener('pointerdown', e => { canvas.setPointerCapture(e.pointerId); pointers.set(e.pointerId, {x:e.clientX, y:e.clientY}); dragging = true; canvas.focus(); });
+canvas.addEventListener('pointermove', e => {
+  const p = pointers.get(e.pointerId); if (!p) return;
+  if (pointers.size === 1){
+    theta -= (e.clientX - p.x) * 0.006;
+    phi = clamp(phi - (e.clientY - p.y) * 0.006, 0.12, 1.72);
+    p.x = e.clientX; p.y = e.clientY;
+  } else if (pointers.size === 2){
+    const [a, b] = [...pointers.values()];
+    const d0 = Math.hypot(a.x-b.x, a.y-b.y);
+    p.x = e.clientX; p.y = e.clientY;
+    const d1 = Math.hypot(a.x-b.x, a.y-b.y);
+    if (d0 > 0 && d1 > 0) dist = clamp(dist * d0/d1, 250, 2200);
+  }
+});
+const endPointer = e => { pointers.delete(e.pointerId); dragging = pointers.size > 0; };
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+canvas.addEventListener('wheel', e => { e.preventDefault(); dist = clamp(dist * Math.exp(e.deltaY * 0.0012), 250, 2200); }, { passive:false });
+canvas.addEventListener('keydown', e => {
+  const step = 0.08;
+  if (e.key === 'ArrowLeft') theta += step; else if (e.key === 'ArrowRight') theta -= step;
+  else if (e.key === 'ArrowUp') phi = clamp(phi - step, 0.12, 1.72); else if (e.key === 'ArrowDown') phi = clamp(phi + step, 0.12, 1.72);
+  else if (e.key === '+' || e.key === '=') dist = clamp(dist*0.9, 250, 2200); else if (e.key === '-') dist = clamp(dist*1.1, 250, 2200);
+  else return;
+  e.preventDefault();
+});
+$('btnFront').addEventListener('click', frontView);
+
+// ---------- foto ----------
+$('btnShot').addEventListener('click', () => {
+  renderer.render(scene, camera);
+  $('shotImg').src = renderer.domElement.toDataURL('image/png');
+  $('shot').hidden = false;
+});
+$('shotClose').addEventListener('click', () => { $('shot').hidden = true; });
+$('shot').addEventListener('click', e => { if (e.target === $('shot')) $('shot').hidden = true; });
+
+// ---------- dimensioni e loop ----------
+function resize(){
+  const w = stage.clientWidth, h = stage.clientHeight;
+  if (!w || !h) return;
+  renderer.setSize(w, h, false);
+  camera.aspect = w/h; camera.updateProjectionMatrix();
+}
+new ResizeObserver(resize).observe(stage);
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function loop(){
+  if (state.spin && !dragging && !reduceMotion) theta += 0.0035;
+  updateCamera();
+  renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+}
+
+// ---------- avvio ----------
+buildBackdrop();
+constrainDims();
+buildBottle();
+sampleTex = drawSample();
+state.front.tex = sampleTex;
+refreshAll(); resize();
+loop();
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => {
+  if (state.front.sample){ const t = drawSample(); state.front.tex = t; sampleTex.dispose(); sampleTex = t; rebuildLabels(); }
+});
+})();
+</script>
