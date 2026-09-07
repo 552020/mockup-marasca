@@ -250,7 +250,7 @@
             <option value="nero" selected>Nero</option>
             <option value="oro">Oro</option>
             <option value="argento">Argento</option>
-            <option value="custom">Colore personalizzato</option>
+            <option value="custom">A scelta (colore qui sotto)</option>
           </select>
         </label>
         <label class="lbl">Finitura etichetta
@@ -260,8 +260,8 @@
           </select>
         </label>
       </div>
-      <div class="row" id="capCustom" hidden>
-        <label class="lbl">Colore del tappo<input type="color" id="capColor" value="#8a1c1c" aria-label="Colore del tappo"></label>
+      <div class="row" id="capCustom">
+        <label class="lbl">Colore del tappo, a scelta<input type="color" id="capColor" value="#151515" aria-label="Colore del tappo"></label>
         <label class="check" style="align-self:end; padding-bottom:8px"><input type="checkbox" id="capMetal"> Finitura metallica</label>
       </div>
       <div class="row">
@@ -983,6 +983,7 @@ const GLASS = {
   trasparente: { color:0xe4efe2, opacity:0.30 },
   ambra:       { color:0x5a2e08, opacity:0.92 },
 };
+const CAP_HEX = { nero:'#151515', oro:'#caa64c', argento:'#d9d9d6' };
 const CAPS = {
   nero:    { color:0x151515, metalness:0.15, roughness:0.45 },
   oro:     { color:0xcaa64c, metalness:1.0,  roughness:0.28 },
@@ -997,7 +998,7 @@ const BACKDROPS = {
 const state = {
   preset:'marasca500', dims: Object.assign({}, PRESETS.marasca500),
   model:null,                      // bottiglia caricata da file, se presente
-  glass:'verde', cap:'nero', capColor:'#8a1c1c', capMetal:false, finish:'opaca', straightNeck:false, spout:false,
+  glass:'verde', cap:'nero', capColor:'#151515', capMetal:false, finish:'opaca', straightNeck:false, spout:false,
   backdrop: prefersDark ? 'scuro' : 'chiaro', spin:true, lock:true,
   front:{ tex:null, aspect:120/90, name:'Etichetta di esempio', px:null, w:90, h:120, bottom:32, sample:true },
   back: { tex:null, aspect:1, name:'', px:null, w:60, h:60 },
@@ -1425,7 +1426,6 @@ function syncUI(){
   $('bwLabel').textContent = fmt(B.w)+' × '+fmt(B.h)+' mm';
   $('lock').checked = state.lock; $('spin').checked = state.spin;
   $('straightNeck').checked = state.straightNeck; $('spout').checked = state.spout;
-  $('capCustom').hidden = state.cap !== 'custom';
   set('capColor', state.capColor); $('capMetal').checked = state.capMetal;
 
   // quote della bottiglia parametrica
@@ -1504,9 +1504,13 @@ $('dShoulder').addEventListener('change', e => onDim('shoulder', e.target.value)
 $('dP').addEventListener('input', e => onDim('p', e.target.value));
 
 $('selGlass').addEventListener('change', e => { state.glass = e.target.value; buildBottle(); applyModelMaterials(); });
-$('selCap').addEventListener('change', e => { state.cap = e.target.value; buildBottle(); refreshAll(); });
-$('capColor').addEventListener('input', e => { state.capColor = e.target.value; buildBottle(); });
-$('capMetal').addEventListener('change', e => { state.capMetal = e.target.checked; buildBottle(); });
+$('selCap').addEventListener('change', e => {
+  state.cap = e.target.value;
+  if (CAP_HEX[state.cap]){ state.capColor = CAP_HEX[state.cap]; state.capMetal = state.cap !== 'nero'; }
+  buildBottle(); refreshAll();
+});
+$('capColor').addEventListener('input', e => { state.capColor = e.target.value; state.cap = 'custom'; buildBottle(); refreshAll(); });
+$('capMetal').addEventListener('change', e => { state.capMetal = e.target.checked; state.cap = 'custom'; buildBottle(); refreshAll(); });
 $('straightNeck').addEventListener('change', e => { state.straightNeck = e.target.checked; buildBottle(); refreshAll(); });
 $('spout').addEventListener('change', e => { state.spout = e.target.checked; buildBottle(); });
 $('selFinish').addEventListener('change', e => { state.finish = e.target.value; rebuildLabels(); });
